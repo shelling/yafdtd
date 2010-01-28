@@ -1,20 +1,12 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 
-import sys
-sys.path.append("./lib")
-
-import os
-import timeit
-
-import matplotlib
-matplotlib.use("Agg")
-
-import numpy
-import pylab
-
+from convention import *
+import_convention(globals())
 
 from fdtd.source import *
+
+# program start
 
 t = numpy.arange(-10, 10, 0.001)
     

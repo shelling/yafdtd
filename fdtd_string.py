@@ -1,33 +1,9 @@
 #!/usr/bin/env python
 
-import os
-import sys
-sys.path += ["./lib"]
+from convention import *
+import_convention(globals())
+
 import fdtd
-
-import matplotlib
-matplotlib.use("Agg")
-
-import math
-import numpy
-# import scipy
-
-import mpmath
-import sympy
-
-class Grid1D(object):
-    """On Dimension Grid Object
-    """
-    
-    def __init__(self, step = { "time":2, "space":2 }):
-        """
-        
-        Arguments:
-        - `step`:
-        - `"space":2 }`:
-        """
-        self._step = step
-
 
 
 class FDTD(object):
