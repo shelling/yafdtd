@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 
-from convention import *
-import_convention(globals())
+
+import convention
 
 from fdtd.source import *
 
 # program start
 
+# plot polynomial
 t = numpy.arange(-10, 10, 0.001)
     
 pylab.plot(t, map( polynomial_pulse, t ) )
@@ -21,8 +22,7 @@ pylab.savefig("poly.png")
 pylab.gcf().clear()
 os.system("open poly.png")
 
-
-
+# plot gaussian
 one = numpy.ones_like(t)
 
 pylab.plot(t, map( gaussian, t, one*2, one*3 ) )

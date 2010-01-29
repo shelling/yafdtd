@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from convention import *
-import_convention(globals())
+import convention
 
 import fdtd
 

@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 
-from convention import *
-import_convention(globals())
+import convention
 
 from pylab import *
 from mpmath import *
-
 
 # program start
 data = numpy.zeros((50,50))
