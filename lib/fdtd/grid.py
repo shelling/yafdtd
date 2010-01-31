@@ -33,7 +33,7 @@ class Plane(object):
     Two dimension grid object
     """
 
-    def __init__(self, abuffer=None, shape=None, eps=None, mu=None, sigmae=None, sigmah=None, timestep=None, spacestep=None):
+    def __init__(self, abuffer=None, shape=None, eps=epsilon_0, mu=mu_0, sigmae=0, sigmah=0, timestep=None, spacestep=None):
         """
         Give one of shape or abuffer to initialize Plane object.
         
@@ -69,10 +69,10 @@ class Plane(object):
             self.y      = numpy.zeros(shape, dtype="float128")
             self.z      = numpy.zeros(shape, dtype="float128")
             
-            self.eps    = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.eps[0:,0:] = (eps or epsilon_0)
-            self.mu     = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.mu[0:,0:]  = (mu or mu_0)
-            self.sigmae = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.sigmae[0:,0:] = (sigmae or 0)
-            self.sigmah = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.sigmah[0:,0:] = (sigmah or 0)
+            self.eps    = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.eps[0:,0:] = eps
+            self.mu     = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.mu[0:,0:]  = mu
+            self.sigmae = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.sigmae[0:,0:] = sigmae
+            self.sigmah = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.sigmah[0:,0:] = sigmah
             
             self.timestep  = (timestep or 1)
             self.spacestep = (spacestep or 1)

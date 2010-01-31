@@ -13,7 +13,7 @@ new_efield = grid.Plane(shape=(301,301), timestep=1, spacestep=2*3*10**8)
 new_hfield = grid.Plane(shape=(301,301), timestep=1, spacestep=2*3*10**8)
 
 
-for step in range(1,300):
+for step in range(1,30):
     new_efield.y[151,151] += float(mpmath.sin(step*mpmath.pi/6.125))*2
     new_efield = update_efield( new_efield, new_hfield )
     new_hfield.z[151,151] += float(mpmath.sin(step*mpmath.pi/6.125))*2
@@ -43,6 +43,7 @@ for step in range(1,300):
     pylab.savefig("result_slice/fdtd_plane_slice-%s.png" % str(step))
     pylab.clf()
 
-os.system("open result")
-os.system("open result_slice")
-print "done"
+if "Darwin" in os.uname():
+    os.system("open result")
+    os.system("open result_slice")
+
