@@ -4,8 +4,6 @@ sys.path += ["lib","/opt/local/Library/Frameworks/Python.framework/Versions/2.6/
 caller = sys._getframe(1).f_globals["__name__"]
 exec "import %s as target" % caller
 
-target.timeit = __import__("timeit")
-
 modules = (
     "sys",
     "os",
@@ -22,8 +20,10 @@ for module_name in modules:
 target.matplotlib.use("Agg")
 target.mpmath.mp.dps = 100
 
-target.__dict__["pylab"] = __import__("pylab")
-target.__dict__["pprint"] = __import__("pprint").pprint
+target.__dict__["pylab"] = __import__("pylab")                # this should be eval after setting Agg backend
+target.__dict__["pprint"] = __import__("pprint").pprint       # import function
+
+
 
 
 # below is obsolete

@@ -2,3 +2,5 @@
 #
 *~
 *.png
+result*
+*.bak
