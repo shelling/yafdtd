@@ -52,6 +52,8 @@ class Plane(object):
         - sigmah: primary lossy coefficient of H field
         """
         if abuffer and len(abuffer.x.shape) == 2:
+            self.shape  = abuffer.x.shape
+            
             self.x      = numpy.zeros_like(abuffer.x)
             self.y      = numpy.zeros_like(abuffer.y)
             self.z      = numpy.zeros_like(abuffer.z)
@@ -64,7 +66,8 @@ class Plane(object):
             self.timestep  = abuffer.timestep
             self.spacestep = abuffer.spacestep
             
-        elif shape:
+        elif shape and len(shape) == 2:
+            self.shape  = shape
             self.x      = numpy.zeros(shape, dtype="float128")
             self.y      = numpy.zeros(shape, dtype="float128")
             self.z      = numpy.zeros(shape, dtype="float128")
@@ -111,4 +114,36 @@ class Point(object):
         self.mu    = properties["mu"]
         self.sigma = properties["sigma"]
         
+# }}}
+
+# {{{
+
+class PlaneBase(object):
+    """
+    Base plane object, just be able to store (x,y,z) value at every points in an array.
+
+    This class aims to become base class of that need to store field corresponding parameters.
+    
+    """
+    
+    def __init__(self, shape=None, abuffer=None):
+        """
+        
+        Arguments:
+        - `shape`:
+        - `abuffer`:
+        """
+        if abuffer:
+            self.shape = abuffer.shape
+            self.x     = abuffer.x
+            self.y     = abuffer.y
+            self.z     = abuffer.z
+            
+        elif len(shape) == 2 and isinstance(shape,type(tuple())):
+            self.shape = shape
+            self.x     = numpy.zeros(shape)
+            self.y     = numpy.zeros(shape)
+            self.z     = numpy.zeros(shape)
+        pass
+
 # }}}
