@@ -36,13 +36,13 @@ for step in range(1,600):
     d = numpy.array(new_hfield.z[0:,150], dtype="float")
 
     for i in xrange(1,len(d)-1):
-        if i%2==0:
+        if i%2==1:
             d[i] = ( d[i-1] + d[i+1] ) / 2
 
     pylab.plot( d )
     pylab.ylim((-0.3,0.3))
     pylab.grid(True)
-    pylab.savefig("result_slice/fdtd_plane_slice-%s.png" % str(step))
+    pylab.savefig("result_slice/fdtd_plane_slice-%.3d.png" % step)
     pylab.clf()
 
 if "Darwin" in os.uname():
