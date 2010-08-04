@@ -2,6 +2,8 @@
 #-*- mode: python -*-
 
 import matplotlib
+matplotlib.use("Agg")                   # for linux without desktop env
+
 import pylab
 import numpy
 import math
