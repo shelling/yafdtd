@@ -7,23 +7,8 @@ import os, csv, re
 from fdtd import source
 from fdtd.algorithm.onedim import *
 from fdtd.grid import String
+from fdtd.utils import *
 
-def save_field(field, filename_pattern, id, axis=None):
-    """
-    shortcut for saving file through matplotlib
-    
-    Arguments:
-    - `field`:
-    - `filename_pattern`:
-    - `id`:
-    - `axis`:
-    """
-    pylab.grid(True)
-    pylab.plot(field)
-    pylab.ylim([-1,1])
-    pylab.savefig(filename_pattern % id)
-    pylab.clf()
-    return None
 
 string = String(31)
 
