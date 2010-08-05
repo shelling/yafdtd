@@ -8,39 +8,50 @@ import os, csv, re
 from fdtd import source
 from fdtd.algorithm.onedim import *
 
-efield = numpy.zeros(31)
-hfield = numpy.zeros(31)
+from fdtd.grid import String
 
+def save_field(field, filename_pattern, id, axis=None):
+    """
+    shortcut for saving file through matplotlib
+    
+    Arguments:
+    - `field`:
+    - `filename_pattern`:
+    - `id`:
+    - `axis`:
+    """
+    pylab.grid(True)
+    pylab.plot(field)
+    pylab.ylim([-1,1])
+    pylab.savefig(filename_pattern % id)
+    pylab.clf()
+    return None
+
+string = String(31)
 
 efield_lm1 = 0
 efield_lm2 = 0
 efield_rm1 = 0
 efield_rm2 = 0
 
-for t in range(1,140):
+for t in range(1,70):
 
-    update_efield(efield, hfield)
+    update_efield(string)
 
-    efield[0]  = efield_lm2
+    string.efield[0]  = efield_lm2
     efield_lm2 = efield_lm1
-    efield_lm1 = efield[1]
+    efield_lm1 = string.efield[1]
 
-    efield[efield.shape[0]-1] = efield_rm2
+    string.efield[string.efield.shape[0]-1] = efield_rm2
     efield_rm2 = efield_rm1
-    efield_rm1 = efield[efield.shape[0]-2]
+    efield_rm1 = string.efield[string.efield.shape[0]-2]
 
+    xcenter = string.efield.shape[0]/2
+    string.efield[xcenter] = source.gaussian_oft(t, 30, 5)
     
-    xcenter = efield.shape[0]/2
-    efield[xcenter] = source.gaussian_oft(t, 20, 5)
+    update_hfield(string)
 
-    
-    update_hfield(efield, hfield)
-
-    pylab.grid(True)
-    pylab.plot( efield )
-    pylab.ylim([-1,1])
-    pylab.savefig("result/oned-testing-%.3d.png" % t)
-    pylab.clf()
+    save_field(string.efield, "result/oned-testing-%.3d.png", t)
     print t
 
 

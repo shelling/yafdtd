@@ -1,24 +1,24 @@
-from mpmath import *
+import math
+import mpmath
 
 
-def update_efield(efield, hfield):
+def update_efield(string):
     """
     update efield
     
     Arguments:
-    - `efield`:
+    - `string`: FDTD.String object containing fields and material data
     """
-    for x in range(1, efield.shape[0]-1):
-        efield[x] = efield[x] + 0.5 * ( hfield[x-1] - hfield[x] )
+    for x in range(1, string.shape[0]-1):
+        string.efield[x] = string.efield[x] + 0.5 * ( string.hfield[x-1] - string.hfield[x] )
 
 
-def update_hfield(efield, hfield):
+def update_hfield(string):
     """
     update hfield
     
     Arguments:
-    - `efield`:
-    - `hfield`:
+    - `string`: FDTD.String instance containing fields and material data
     """
-    for x in range(0, hfield.shape[0]-1):
-        hfield[x] = hfield[x] + 0.5 * ( efield[x] - efield[x+1] )
+    for x in range(0, string.shape[0]-1):
+        string.hfield[x] = string.hfield[x] + 0.5 * ( string.efield[x] - string.efield[x+1] )

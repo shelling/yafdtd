@@ -7,7 +7,7 @@ def line(abuffer):
     Arguments:
     - `abuffer`:
     """
-    return grid.Line(abuffer)
+    return grid.String(abuffer)
     
 
 def plane(abuffer):

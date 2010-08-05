@@ -2,7 +2,7 @@
 fdtd.grid.py
 
 Implement three kinds of grid object 
-Line as 1-D grid
+String as 1-D grid
 Plane as 2-D grid
 Cube as 3-D grid
 
@@ -12,19 +12,28 @@ import numpy
 from scipy.constants import epsilon_0, mu_0
 
 # {{{
-class Line(object):
+class String():
     """
-    One dimension grid object
+    1-D grid 
     """
     
-    def __init__(self, step = {}):
+    def __init__(self, length):
         """
-        """
+        giving length as quantity of cells to create a FDTD String
         
-    def timestep(self, ):
+        Arguments:
+        - `length`: quantity of cells
         """
-        """
-# }}}        
+        self.efield = numpy.zeros(length)
+        self.hfield = numpy.zeros(length)
+        self.eps    = numpy.zeros(length)
+        self.sigmae = numpy.zeros(length)
+        self.shape  = self.efield.shape
+        pass
+
+
+# }}}
+
 
 
 # {{{
