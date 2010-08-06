@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 import convention
-import math
 import os, csv, re
 
 from fdtd import source
 from fdtd.algorithm.onedim import *
 from fdtd.grid import String
 from fdtd.utils import *
-
 
 string = String(31)
 
