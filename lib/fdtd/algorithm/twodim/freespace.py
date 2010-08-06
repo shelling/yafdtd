@@ -1,47 +1,45 @@
 import mpmath
 import math
 
-from fdtd import grid
 
-def update_efield( efield, hfield ):
+def update_efield( plane ):
     """
     Two dimension efield update equation
 
-    all points at ( x + y ) % 2 == 1 would be updated.
-
     Arguments:
-    - efield: previous efield
-    - hfield: previous hfield
+    - `plane`: fdtd.grid.Plane instance 
     """
-    new_efield = grid.Plane( abuffer=efield )
+    (xaxis,yaxis) = plane.shape
 
-    (xaxis,yaxis) = efield.x.shape
-    
-    for i in range(1,xaxis-1):
-        for j in range(1,yaxis-1):
-            if (i+j)%2 == 1:
-                curl_coefficient = (new_efield.timestep / (new_efield.spacestep * new_efield.eps[i,j]))
-                new_efield.x[i,j] = efield.x[i,j] + curl_coefficient * ( hfield.z[i,j+1] - hfield.z[i,j-1] )
-                new_efield.y[i,j] = efield.y[i,j] - curl_coefficient * ( hfield.z[i+1,j] - hfield.z[i-1,j] )
+    if plane.transverse == "TE":
+        for i in range(1,xaxis-1):
+            for j in range(1,yaxis-1):
+                plane.exfield[i,j] = plane.exfield[i,j] + 0.5 * ( plane.hzfield[i,j+1] - plane.hzfield[i,j-1] )
+                plane.eyfield[i,j] = plane.eyfield[i,j] - 0.5 * ( plane.hzfield[i+1,j] - plane.hzfield[i-1,j] )
+    elif plane.transverse == "TM":
+        for i in range(1,xaxis-1):
+            for j in range(1,yaxis-1):
+                plane.ezfield[i,j] = plane.ezfield[i,j] + 0.5 * ( plane.hyfield[i,j] - plane.hyfield[i-1,j] - plane.hxfield[i,j] + plane.hxfield[i,j-1] )
+    return None
 
-    return new_efield
 
-
-def update_hfield( efield, hfield ):
+def update_hfield( plane ):
     """
     Two dimension hfield update equation
-
-    all points at ( x + y ) % 2 == 0 would be updated.
+    
+    Arguments:
+    - `plane`: fdtd.grid.Plane instance 
     """
-    new_hfield = grid.Plane( abuffer=hfield )
-    
-    (xaxis,yaxis) = hfield.x.shape
-    
-    for i in range(1,xaxis-1):
-        for j in range(1,yaxis-1):
-            if (i+j)%2 == 0:
-                curl_coefficient = new_hfield.timestep / (new_hfield.spacestep * new_hfield.mu[i,j])
-                new_hfield.z[i,j] = hfield.z[i,j] + curl_coefficient * ( efield.x[i,j+1] - efield.x[i,j-1] ) - curl_coefficient * ( efield.y[i+1,j] - efield.y[i-1,j] )
-    
-    return new_hfield
+    (xaxis,yaxis) = plane.shape
+
+    if plane.transverse == "TE":
+        for i in range(0,xaxis-1):
+            for j in range(0,yaxis-1):
+                plane.hzfield[i,j] = plane.hzfield[i,j] + 0.5 * ( plane.exfield[i,j+1] - plane.exfield[i,j-1] ) - 0.5 * ( plane.eyfield[i+1,j] - plane.eyfield[i-1,j] )
+    elif plane.transverse == "TM":
+        for i in range(0,xaxis-1):
+            for j in range(0,yaxis-1):
+                plane.hxfield[i,j] = plane.hxfield[i,j] + 0.5 * ( plane.ezfield[i,j] - plane.ezfield[i,j+1] )
+                plane.hyfield[i,j] = plane.hyfield[i,j] + 0.5 * ( plane.ezfield[i+1,j] - plane.ezfield[i,j] )
+    return None
 

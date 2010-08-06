@@ -12,9 +12,9 @@ import numpy
 from scipy.constants import epsilon_0, mu_0
 
 # {{{
-class String():
+class String(object):
     """
-    1-D grid 
+    1-D grid object
     """
     
     def __init__(self, length):
@@ -42,53 +42,30 @@ class Plane(object):
     Two dimension grid object
     """
 
-    def __init__(self, abuffer=None, shape=None, eps=epsilon_0, mu=mu_0, sigmae=0, sigmah=0, timestep=None, spacestep=None):
+    def __init__(self, shape, transverse ):
         """
-        Give one of shape or abuffer to initialize Plane object.
-        
-        Once abuffer is given, shape and other parameters would be obsolete.
-
-        Alternatively, if abuffer is None, Plane would be initialized with rest parameters.
-
-        If both abuffer and shape were not given, Error would be raised.
-        
         Arguments:
-        - abuffer: grid buffer used to initialize plane
-        - shape: specify plance shape
-        - eps: primary permitivity value would be assign to whole region
-        - mu: primary permeability value would be assign to whole region
-        - sigmae: primary lossy coefficient of E field
-        - sigmah: primary lossy coefficient of H field
+        - `shape`: specify plance shape
+        - `transverse`: TM (Ez Hx Hy) or TE (Hz Ex Ey)
         """
-        if abuffer and len(abuffer.x.shape) == 2:
-            self.shape  = abuffer.x.shape
+
+        self.shape = shape
+        self.transverse = transverse
+
+        if transverse == "TE":
+            self.hzfield = numpy.zeros(shape)
+            self.exfield = numpy.zeros(shape)
+            self.eyfield = numpy.zeros(shape)
             
-            self.x      = numpy.zeros_like(abuffer.x)
-            self.y      = numpy.zeros_like(abuffer.y)
-            self.z      = numpy.zeros_like(abuffer.z)
+        elif transverse == "TM":
+            self.ezfield = numpy.zeros(shape)
+            self.hxfield = numpy.zeros(shape)
+            self.hyfield = numpy.zeros(shape)
             
-            self.eps    = abuffer.eps
-            self.mu     = abuffer.mu
-            self.sigmae = abuffer.sigmae
-            self.sigmah = abuffer.sigmah
-            
-            self.timestep  = abuffer.timestep
-            self.spacestep = abuffer.spacestep
-            
-        elif shape and len(shape) == 2:
-            self.shape  = shape
-            self.x      = numpy.zeros(shape, dtype="float128")
-            self.y      = numpy.zeros(shape, dtype="float128")
-            self.z      = numpy.zeros(shape, dtype="float128")
-            
-            self.eps    = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.eps[0:,0:] = eps
-            self.mu     = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.mu[0:,0:]  = mu
-            self.sigmae = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.sigmae[0:,0:] = sigmae
-            self.sigmah = numpy.ndarray(shape=self.x.shape, dtype="float128"); self.sigmah[0:,0:] = sigmah
-            
-            self.timestep  = (timestep or 1)
-            self.spacestep = (spacestep or 1)
-        pass
+        else:
+            # raise error here
+            pass
+        return None
 
 # }}}
 
@@ -127,32 +104,20 @@ class Point(object):
 
 # {{{
 
-class PlaneBase(object):
+class Cylinder(object):
     """
-    Base plane object, just be able to store (x,y,z) value at every points in an array.
-
-    This class aims to become base class of that need to store field corresponding parameters.
-    
+    3-D grid object of coordinate R Phi Z
     """
     
-    def __init__(self, shape=None, abuffer=None):
+    def __init__(self, shape):
         """
+        giving shape contain R Phi Z to create Cylinder
         
         Arguments:
         - `shape`:
-        - `abuffer`:
         """
-        if abuffer:
-            self.shape = abuffer.shape
-            self.x     = abuffer.x
-            self.y     = abuffer.y
-            self.z     = abuffer.z
-            
-        elif len(shape) == 2 and isinstance(shape,type(tuple())):
-            self.shape = shape
-            self.x     = numpy.zeros(shape)
-            self.y     = numpy.zeros(shape)
-            self.z     = numpy.zeros(shape)
+        self._shape = shape
         pass
+
 
 # }}}
