@@ -12,42 +12,36 @@ new_efield = grid.Plane(shape=(301,301), timestep=1, spacestep=2*3*10**8)
 #new_efield.eps[:180,0:] *= 2
 new_efield.sigmae = grid.PlaneBase(new_efield.shape)
 new_efield.sigmah = grid.PlaneBase(new_efield.shape)
-###
-new_efield.sigmae.y[0,0:301] = new_efield.sigmae.x[300,0:301] = 1000
-
-new_efield.sigmae.y[1,1:300] = new_efield.sigmae.x[299,1:300] = 870
-
-new_efield.sigmae.y[2,2:299] = new_efield.sigmae.y[298,2:299] = 660
-
-new_efield.sigmae.y[3,3:298] = new_efield.sigmae.y[297,3:298] = 540
-
-new_efield.sigmae.y[4,4:297] = new_efield.sigmae.y[296,4:297] = 430
-
-new_efield.sigmae.y[5,5:296] = new_efield.sigmae.y[295,5:296] = 350
-
-new_efield.sigmae.y[6,6:295] = new_efield.sigmae.y[294,6:295] = 270
-
-new_efield.sigmae.y[7,7:294] = new_efield.sigmae.y[293,7:294] = 180
-
-new_efield.sigmae.y[8,8:293] = new_efield.sigmae.y[292,8:293] = 120
-
-new_efield.sigmae.y[9,9:292] = new_efield.sigmae.y[291,9:292] = 30
 
 ###
-new_efield.sigmae.y[0:301,0] = 5
-new_efield.sigmae.y[0:301,300] = 5
+# new_efield.sigmah.x[0,0:301] = new_efield.sigmah.x[300,0:301] = 37000
+# new_efield.sigmah.x[1,1:300] = new_efield.sigmah.x[299,1:300] = 25000
+# new_efield.sigmah.x[2,2:299] = new_efield.sigmah.x[298,2:299] = 19000
+# new_efield.sigmah.x[3,3:298] = new_efield.sigmah.x[297,3:298] = 15000
+# new_efield.sigmah.x[4,4:297] = new_efield.sigmah.x[296,4:297] = 12000
+# new_efield.sigmah.x[5,5:296] = new_efield.sigmah.x[295,5:296] = 80000
+# new_efield.sigmah.x[6,6:295] = new_efield.sigmah.x[294,6:295] = 80000
+# new_efield.sigmah.x[7,7:294] = new_efield.sigmah.x[293,7:294] = 80000
+# new_efield.sigmah.x[8,8:293] = new_efield.sigmah.x[292,8:293] = 80000
+# new_efield.sigmah.x[9,9:292] = new_efield.sigmah.x[291,9:292] = 80000
 
-new_efield.sigmae.y[1:300,1] = 4.5
-new_efield.sigmae.y[1:300,299] = 4.5
+new_efield.sigmae.x[0,0:301] = new_efield.sigmae.x[300,0:301] = 37000
+new_efield.sigmae.x[1,1:300] = new_efield.sigmae.x[299,1:300] = 25000
+new_efield.sigmae.x[2,2:299] = new_efield.sigmae.x[298,2:299] = 19000
+new_efield.sigmae.x[3,3:298] = new_efield.sigmae.x[297,3:298] = 15000
+new_efield.sigmae.x[4,4:297] = new_efield.sigmae.x[296,4:297] = 12000
+new_efield.sigmae.x[5,5:296] = new_efield.sigmae.x[295,5:296] = 80000
+new_efield.sigmae.x[6,6:295] = new_efield.sigmae.x[294,6:295] = 80000
+new_efield.sigmae.x[7,7:294] = new_efield.sigmae.x[293,7:294] = 80000
+new_efield.sigmae.x[8,8:293] = new_efield.sigmae.x[292,8:293] = 80000
+new_efield.sigmae.x[9,9:292] = new_efield.sigmae.x[291,9:292] = 80000
 
-new_efield.sigmae.y[2:299,2] = 4.0
-new_efield.sigmae.y[2:299,298] = 4.0
-
-new_efield.sigmae.y[3:298,3] = 3.5
-new_efield.sigmae.y[3:298,297] = 3.5
-
-new_efield.sigmae.y[4:297,4] = 3.0
-new_efield.sigmae.y[4:297,296] = 3.0
+###
+new_efield.sigmae.x[0:301,0] = new_efield.sigmae.x[0:301,300] = 37000
+new_efield.sigmae.x[1:300,1] = new_efield.sigmae.x[1:300,299] = 25000
+new_efield.sigmae.x[2:299,2] = new_efield.sigmae.x[2:299,298] = 19000
+new_efield.sigmae.x[3:298,3] = new_efield.sigmae.x[3:298,297] = 15000
+new_efield.sigmae.x[4:297,4] = new_efield.sigmae.x[4:297,296] = 12000
 
 
 ###
@@ -66,11 +60,11 @@ new_hfield.sigmae = new_efield.sigmae
 new_hfield.sigmah = new_efield.sigmah
 
 
-for step in range(1,250):
+for step in range(1,50):
     new_efield.y[149:152,149:152] += float(mpmath.sin(step*mpmath.pi/6.125))
     new_efield = update_efield( new_efield, new_hfield )
-    new_hfield.zx[280,150] += float(mpmath.sin(step*mpmath.pi/6.125))/2
-    new_hfield.zy[280,150] += float(mpmath.sin(step*mpmath.pi/6.126))/2
+    new_hfield.zx[276,150] += float(mpmath.sin(step*mpmath.pi/6.125))/2
+    new_hfield.zy[276,150] += float(mpmath.sin(step*mpmath.pi/6.126))/2
     new_hfield = update_hfield( new_efield, new_hfield )
 
     h = numpy.array(new_hfield.z, dtype="float")
