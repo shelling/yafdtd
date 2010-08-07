@@ -40,6 +40,8 @@ class String(object):
 class Plane(object):
     """
     Two dimension grid object
+    Only generial parameters are defined in constructor.
+    The rest, related to BPML or UPML, are appended in helper functions
     """
 
     def __init__(self, shape, transverse ):
@@ -56,15 +58,14 @@ class Plane(object):
             self.hzfield = numpy.zeros(shape)
             self.exfield = numpy.zeros(shape)
             self.eyfield = numpy.zeros(shape)
-            
         elif transverse == "TM":
             self.ezfield = numpy.zeros(shape)
             self.hxfield = numpy.zeros(shape)
             self.hyfield = numpy.zeros(shape)
-            
         else:
             # raise error here
             pass
+
         return None
 
 # }}}
