@@ -8,12 +8,11 @@ from fdtd.algorithm.twodim import freespace, bpml
 from fdtd.grid import Plane
 from fdtd.utils import *
 
-plane = Plane( (31,31), "TM")
+plane = Plane( (21,21), "TM")
 bpml.append_pml( plane )
 bpml.plot_pml_params(plane, "/tmp/a.png")
-os.system("open /tmp/a.png")
 
-for t in range(0,120):
+for t in range(0,500):
     bpml.update_efield( plane )
     plane.ezfield[plane.shape[0]/2, plane.shape[1]/2] = source.sin_oft(t, 10)
     bpml.update_hfield( plane )

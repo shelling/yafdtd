@@ -23,6 +23,7 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
     elif len(field.shape) == 3:
         pass
     else:
+        # raise error here
         pass
     
     pylab.savefig(filename_pattern % id)

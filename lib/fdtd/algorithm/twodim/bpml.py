@@ -66,6 +66,9 @@ def append_pml( plane, thick=8.0 ):
     - `plane`: fdtd.grid.Plane instance
     - `thick`: the number of cells PML would occupy
     """
+    if plane.shape[0] < thick * 2 or plane.shape[1] < thick * 2:
+        # raise error here
+        pass
     # append parameters for BPML
     plane.pml_thick = thick
 
@@ -117,6 +120,10 @@ def strip_pml(plane):
     Arguments:
     - `plane`:
     """
+    for item in [plane.gi2, plane.gi3, plane.fi2, plane.fi3, plane.gj2, plane.gj3, plane.fj2, plane.fj3 ]:
+        item.fill(1.0)
+    for item in [plane.fi1, plane.fj1]:
+        item.fill(0.0)
     return None
 
 def plot_pml_params(plane, filename):
