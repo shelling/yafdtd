@@ -10,6 +10,8 @@ from fdtd.utils import *
 
 plane = Plane( (31,31), "TM")
 bpml.append_pml( plane )
+bpml.plot_pml_params(plane, "/tmp/a.png")
+os.system("open /tmp/a.png")
 
 for t in range(0,120):
     bpml.update_efield( plane )

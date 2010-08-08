@@ -1,6 +1,7 @@
 import mpmath
 import math
 import numpy
+import pylab
 
 def update_efield( plane, region=None ):
     """
@@ -125,15 +126,14 @@ def plot_pml_params(plane, filename):
     Arguments:
     - `plane`:
     """
-    # not yet implement
-    # pylab.plot( plane.gi2, "-+" )
-    # pylab.plot( plane.gi3, "--" )
-    # pylab.plot( plane.fi1, "-o" )
-    # pylab.plot( plane.fi2, "-*" )
-    # pylab.plot( plane.fi3, "-|" )
-    # pylab.savefig("/tmp/i.png")
-    # pylab.clf()
-    # os.system("open /tmp/i.png")
+    pylab.subplot(211)
+    for item in [plane.gi2, plane.gi3, plane.fi1, plane.fi2, plane.fi3]:
+        pylab.plot(item)
+    pylab.grid(True)
+    pylab.subplot(212)
+    for item in [plane.gj2, plane.gj3, plane.fj1, plane.fj2, plane.fj3]:
+        pylab.plot(item)
+    pylab.grid(True)
+    pylab.savefig(filename)
+    pylab.clf()
     return None
-
-    
