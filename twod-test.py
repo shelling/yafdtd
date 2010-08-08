@@ -1,28 +1,12 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 import convention
-import os, csv, re
+import os, csv, re, gc
 
 from fdtd import source
 from fdtd.algorithm.twodim import freespace, bpml
 from fdtd.grid import Plane
 from fdtd.utils import *
-
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FixedLocator, FormatStrFormatter
-
-def save_field_surf(field, filename_pattern, id):
-    x = numpy.arange(0,field.shape[0])
-    y = numpy.arange(0,field.shape[1])
-    x, y = numpy.meshgrid(x, y)
-    fig = pylab.figure()
-    ax = fig.gca(projection="3d")
-    ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
-    fig.gca().set_zlim3d([-1,1])
-    pylab.savefig(filename_pattern % id)
-    return None
-
 
 plane = Plane( (31,31), "TM")
 bpml.append_pml( plane )

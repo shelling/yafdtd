@@ -1,5 +1,9 @@
 import matplotlib
 import pylab
+import numpy
+
+from matplotlib import cm, _pylab_helpers, interactive
+from mpl_toolkits.mplot3d import Axes3D
 
 def save_field(field, filename_pattern, id, intensity=[-1,1]):
     """
@@ -21,17 +25,28 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         
     elif len(field.shape) == 2:
         fig = pylab.figure()
-        ax = fig.gca()
-        im = ax.imshow( field, norm=matplotlib.colors.Normalize( *(intensity + [True]) ) )
+        im = fig.gca().imshow( field, norm=matplotlib.colors.Normalize( *(intensity + [True]) ) )
         fig.colorbar(im)
         fig.savefig(filename_pattern % id)
         fig.clf()
+        _pylab_helpers.Gcf.destroy_all()
         
     elif len(field.shape) == 3:
         pass
     else:
         # raise error here
         pass
-    
-    
     return None
+
+def save_field_surf(field, filename_pattern, id):
+    x = numpy.arange(0,field.shape[0])
+    y = numpy.arange(0,field.shape[1])
+    x, y = numpy.meshgrid(x, y)
+    fig = pylab.figure()
+    ax = fig.gca(projection="3d")
+    ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
+    ax.set_zlim3d([-1,1])
+    fig.savefig(filename_pattern % id)
+    _pylab_helpers.Gcf.destroy_all()
+    return None
+
