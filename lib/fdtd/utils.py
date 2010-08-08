@@ -13,7 +13,7 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
     - `field`: the field 
     - `filename_pattern`: the filename pattern 
     - `id`: the distinguish identity would be applied to filename pattern
-    - `intensity`: the range of field intensity show on plot
+    - `intensity`: the range of field intensity show on y-index of plot
     """
     if len(field.shape) == 1:
         pylab.grid(True)
@@ -38,7 +38,16 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         pass
     return None
 
-def save_field_surf(field, filename_pattern, id):
+def save_field_surf(field, filename_pattern, id intensity=[-1,1]):
+    """
+    shortcut for saving field as 3D plot through matplotlib
+
+    Arguments:
+    -`field`: the field
+    -`filename_pattern': the filename pattern
+    -`id`: the distinguish identity would be applied to filename pattern
+    -`intensity`: the range of field intensity show on z-index of plot
+    """
     x = numpy.arange(0,field.shape[0])
     y = numpy.arange(0,field.shape[1])
     x, y = numpy.meshgrid(x, y)
