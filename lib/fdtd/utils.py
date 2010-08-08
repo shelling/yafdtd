@@ -38,7 +38,7 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         pass
     return None
 
-def save_field_surf(field, filename_pattern, id intensity=[-1,1]):
+def save_field_surf(field, filename_pattern, id, intensity=[-1,1]):
     """
     shortcut for saving field as 3D plot through matplotlib
 
