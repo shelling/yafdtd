@@ -28,7 +28,7 @@ def save_field_surf(field, filename_pattern, id):
 plane = Plane( (31,31), "TM")
 bpml.append_pml( plane )
 bpml.plot_pml_params(plane, "/tmp/a.png")
-os.system("open /tmp/a.png")
+
 
 for t in range(0,500):
     bpml.update_efield( plane )
