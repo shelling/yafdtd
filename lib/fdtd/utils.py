@@ -15,10 +15,17 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         pylab.grid(True)
         pylab.plot(field)
         pylab.ylim( intensity )
+        pylab.savefig(filename_pattern % id)
+        pylab.clf()
+        # should be rewritten to use local figure
         
     elif len(field.shape) == 2:
-        pylab.imshow( field, norm=matplotlib.colors.Normalize( *(intensity + [True]) ) )
-        pylab.colorbar()
+        fig = pylab.figure()
+        ax = fig.gca()
+        im = ax.imshow( field, norm=matplotlib.colors.Normalize( *(intensity + [True]) ) )
+        fig.colorbar(im)
+        fig.savefig(filename_pattern % id)
+        fig.clf()
         
     elif len(field.shape) == 3:
         pass
@@ -26,7 +33,5 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         # raise error here
         pass
     
-    pylab.savefig(filename_pattern % id)
-    pylab.clf()
     
     return None

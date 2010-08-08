@@ -16,12 +16,11 @@ def save_field_surf(field, filename_pattern, id):
     x = numpy.arange(0,field.shape[0])
     y = numpy.arange(0,field.shape[1])
     x, y = numpy.meshgrid(x, y)
-    pylab.gca(projection="3d").plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
-    pylab.gca().set_zlim3d([-1,1])
+    fig = pylab.figure()
+    ax = fig.gca(projection="3d")
+    ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
+    fig.gca().set_zlim3d([-1,1])
     pylab.savefig(filename_pattern % id)
-    pylab.gca().cla()
-    # should reset current axes object here
-    # which is not yet implement
     return None
 
 
@@ -35,5 +34,5 @@ for t in range(0,500):
     plane.ezfield[plane.shape[0]/2, plane.shape[1]/2] = source.sin_oft(t, 10)
     bpml.update_hfield( plane )
     save_field_surf(plane.ezfield, "result/twod-testing-surface-%.3d.png", t )
-    # save_field(plane.ezfield, "result/twod-testing-%.3d.png", t, [-1,1])
+    save_field(plane.ezfield, "result/twod-testing-%.3d.png", t, [-1,1])
     print t
