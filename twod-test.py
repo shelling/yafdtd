@@ -12,7 +12,7 @@ plane = Plane( (31,31), "TM")
 bpml.append_pml( plane )
 bpml.plot_pml_params(plane, "/tmp/a.png")
 
-for t in range(0,500):
+for t in range(0,1000):
     bpml.update_efield( plane )
     plane.ezfield[plane.shape[0]/2, plane.shape[1]/2] = source.sin_oft(t, 10)
     bpml.update_hfield( plane )

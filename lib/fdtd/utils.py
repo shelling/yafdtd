@@ -28,13 +28,14 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         im = fig.gca().imshow( field, norm=matplotlib.colors.Normalize( *(intensity + [True]) ) )
         fig.colorbar(im)
         fig.savefig(filename_pattern % id)
-        fig.clf()
-        _pylab_helpers.Gcf.destroy_all()
+        # _pylab_helpers.Gcf.destroy_all()
+        _pylab_helpers.Gcf.destroy_fig(fig)
         
     elif len(field.shape) == 3:
         pass
     else:
-        # raise error here
+        raise TypeError("save_field takes 1 to 3 dimension(s) numpy.ndarray")
+        # shoudld raise dimension error here
         pass
     return None
 
@@ -56,6 +57,7 @@ def save_field_surf(field, filename_pattern, id, intensity=[-1,1]):
     ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
     ax.set_zlim3d([-1,1])
     fig.savefig(filename_pattern % id)
-    _pylab_helpers.Gcf.destroy_all()
+    # _pylab_helpers.Gcf.destroy_all()
+    _pylab_helpers.Gcf.destroy_fig(fig)
     return None
 
