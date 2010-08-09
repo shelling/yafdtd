@@ -144,3 +144,20 @@ def plot_pml_params(plane, filename):
     pylab.savefig(filename)
     pylab.clf()
     return None
+
+
+
+
+class BPML(object):
+    """
+    BPML object, storing g and f parameters for update equations
+    """
+    
+    def __init__(self, thick):
+        """
+        
+        Arguments:
+        - `thick`:
+        """
+        self._thick = thick
+        
