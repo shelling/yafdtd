@@ -40,16 +40,35 @@ def update_abc(string, abc={"lm1":0, "lm2":0, "rm1":0, "rm2":0}):
     - `string`: fdtd.String instance containing fields and material data
     - `abc`: static variable stored previous data in two steps, which should not be feed by your own.
     """
-    # left-hand side
-    string.efield[0]  = abc["lm2"]
-    abc["lm2"] = abc["lm1"]
-    abc["lm1"] = string.efield[1]
-    # right-hand side
-    string.efield[string.shape[0]-1] = abc["rm2"]
-    abc["rm2"] = abc["rm1"]
-    abc["rm1"] = string.efield[string.efield.shape[0]-2]
+    update_abc_left(string)
+    update_abc_right(string)
     return None
 
+def update_abc_left(string, abc={"m1":0, "m2":0}):
+    """
+    update left side cell of Absorbing Boundary Conditions
+    
+    Arguments:
+    - `string`:
+    - `abc`:
+    """
+    string.efield[0] = abc["m2"]
+    abc["m2"] = abc["m1"]
+    abc["m1"] = string.efield[1]
+    return None
+
+def update_abc_right(string, abc={"m1":0, "m2":0}):
+    """
+    update right side cell of Absorbing Boundary Conditions
+    
+    Arguments:
+    - `string`:
+    - `abc`:
+    """
+    string.efield[-1] = abc["m2"]
+    abc["m2"] = abc["m1"]
+    abc["m1"] = string.efield[-2]
+    return None
 
 
 
