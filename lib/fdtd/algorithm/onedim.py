@@ -9,7 +9,7 @@ def update_efield(string):
     Arguments:
     - `string`: fdtd.String instance containing fields and material data
     """
-    for x in range(1, string.shape[0]-1):
+    for x in range(1, string.shape[0]):
         string.efield[x] = string.efield[x] + 0.5 * ( string.hfield[x-1] - string.hfield[x] )
     return None
 

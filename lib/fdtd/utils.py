@@ -19,6 +19,7 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         pylab.grid(True)
         pylab.plot(field)
         pylab.ylim( intensity )
+        pylab.xlim( [0, field.shape[0]-1] )
         pylab.savefig(filename_pattern % id)
         pylab.clf()
         # should be rewritten to use local figure
