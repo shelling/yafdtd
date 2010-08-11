@@ -1,8 +1,8 @@
 # YAFDTD README
 Yet Another Finite-Difference Time-Domain Framework
 
-## Installationt
+## Installation
 
 
 ## License
-This software was released under GPL v2
+This software is released under GPL v2
