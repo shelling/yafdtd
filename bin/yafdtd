@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+#-*- mode: python -*-
+
+# main executable file of YAFDTD
+# This file aims at doing simulation from setting file without any Python code
