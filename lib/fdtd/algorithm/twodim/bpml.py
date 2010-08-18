@@ -1,3 +1,7 @@
+"""
+Berenger's Perfect Matched Layer (BPML) related functions
+"""
+
 import mpmath
 import math
 import numpy
@@ -5,7 +9,7 @@ import pylab
 
 def update_efield( plane, region=None ):
     """
-    2-D E field update eqution upon BPML
+    2-D E field update eqution upon Berenger's PML
     using region to specify work region, or work on whole region
     
     Arguments:
@@ -27,7 +31,7 @@ def update_efield( plane, region=None ):
 
 def update_hfield( plane, region=None ):
     """
-    2-D H field update equation upon BPML
+    2-D H field update equation upon Berenger's PML
     using region to specify work region, or work on whole region
     
     Arguments:
@@ -150,7 +154,7 @@ def plot_pml_params(plane, filename):
 
 class BPML(object):
     """
-    BPML object, storing g and f parameters for update equations
+    Berenger's PML object, storing g and f parameters for update equations
     """
     
     def __init__(self, thick):
@@ -159,5 +163,5 @@ class BPML(object):
         Arguments:
         - `thick`:
         """
-        self._thick = thick
-        
+        self.thick = thick
+        return None

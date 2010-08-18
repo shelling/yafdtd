@@ -2,4 +2,5 @@
 #-*- mode: python -*-
 
 # main executable file of YAFDTD
-# This file aims at doing simulation from setting file without any Python code
+# 
+# This file aims at doing simulation from parameters in setting file without any Python code

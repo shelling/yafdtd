@@ -1,13 +1,14 @@
 from numpy import *
 from fdtd import grid
 
-def line(abuffer):
+def string(length):
     """
     
     Arguments:
-    - `abuffer`:
+    - `length`: how many meters the grid holds
+    - ``:
     """
-    return grid.String(abuffer)
+    return grid.String()
     
 
 def plane(abuffer):
