@@ -82,5 +82,5 @@ def update_source(string, locate, source, params):
     - `source`: source function
     - `params`: array containing parameters would be passed to source
     """
-    string.efield[locate] = source(*params)
+    string.efield[locate] += source(*params) # soft source preventing reflection
     return None
