@@ -137,6 +137,16 @@ def plot_pml_params(plane, filename):
     - `plane`:
     - `filename`:
     """
+    pylab.subplot(211)
+    for item in [plane.gi2, plane.gi3, plane.fi1, plane.fi2, plane.fi3]:
+        pylab.plot(item)
+    pylab.grid(True)
+    pylab.subplot(212)
+    for item in [plane.gj2, plane.gj3, plane.fj1, plane.fj2, plane.fj3]:
+        pylab.plot(item)
+    pylab.grid(True)
+    pylab.savefig(filename)
+    pylab.clf()
     return None
 
 
@@ -150,6 +160,7 @@ class UPML(object):
         """
 
         Arguments:
+        -`plane`:
         -`thick`:
         """
         self.thick = thick
@@ -158,26 +169,24 @@ class UPML(object):
 
         self.gi2 = numpy.ones(x)
         self.gi3 = numpy.ones(x)
-
+        
         self.gj2 = numpy.ones(y)
         self.gj3 = numpy.ones(y)
 
         self.fi1 = numpy.zeros(x)
-        
         self.fi2 = numpy.ones(x)
         self.fi3 = numpy.ones(x)
 
         self.fj1 = numpy.zeros(y)
-        
         self.fj2 = numpy.ones(y)
         self.fj3 = numpy.ones(y)
 
-        self.calculate()
+        self.enable()
 
         return None
 
 
-    def calculate(self):
+    def enable(self):
         """
         calculate g and f parameters of UPML itself
         
@@ -202,4 +211,49 @@ class UPML(object):
             self.fj2[j] = self.fj2[-1-j] = 1.0 / (1.0 + xn)
             self.fj3[j] = self.fj3[-1-j] = (1.0 - xn) / (1.0 + xn)
 
+        return self
+
+    def disable(self):
+        """
+        set g2, g3, f2, f3 to one, f1 to zero to disable UPML
+        
+        """
+        for item in [
+            self.gi2,
+            self.gi3,
+            self.fi2,
+            self.fi3,
+            self.gj2,
+            self.gj3,
+            self.fj2,
+            self.fj3]:
+            item.fill(1)
+            
+        for item in [
+            self.fi1,
+            self.fj1]:
+            item.fill(0)
+        
+        return self
+
+    def plot(self, filename):
+        """
+        plot g and f parameters of PML itself
+        
+        Arguments:
+        - `filename`:
+        """
+        pylab.subplot(211)
+        for item in [self.gi2, self.gi3, self.fi1, self.fi2, self.fi3]:
+            pylab.plot(item)
+        pylab.grid(True)
+        pylab.subplot(212)
+        for item in [self.gj2, self.gj3, self.fj1, self.fj2, self.fj3]:
+            pylab.plot(item)
+        pylab.grid(True)
+        pylab.savefig(filename)
+        pylab.clf()
         return None
+
+
+        
