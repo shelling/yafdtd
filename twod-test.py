@@ -10,7 +10,8 @@ from fdtd.utils import *
 
 plane = Plane( (31,31), "TM")
 upml.append_pml( plane )
-upml.plot_pml_params(plane, "/tmp/a.png")
+plane.pml.plot("/tmp/a.png")
+
 
 for t in range(0,100):
     upml.update_efield( plane )
