@@ -2,6 +2,7 @@
 Unaxial Perfect Matched Layer (UPML) related functions
 """
 
+from __future__ import division         # using real division with / operator
 
 import mpmath
 import math
@@ -59,7 +60,7 @@ def update_hfield( plane, region=None ):
 
 
 
-def append_pml( plane, thick=8.0 ):
+def append_pml( plane, thick=8 ):
     """
     append perfect matched layer and related parameters to surround of problem region
 
@@ -80,45 +81,41 @@ def append_pml( plane, thick=8.0 ):
     # append parameters for BPML
     plane.pml_thick = thick
 
-    shape = plane.shape
+    (x,y) = plane.shape
     
-    plane.ihx = numpy.zeros(shape)
-    plane.ihy = numpy.zeros(shape)
+    plane.ihx = numpy.zeros(plane.shape)
+    plane.ihy = numpy.zeros(plane.shape)
 
-    plane.gi2 = numpy.ones(shape[0])
-    plane.gi3 = numpy.ones(shape[0])
+    plane.gi2 = numpy.ones(x)
+    plane.gi3 = numpy.ones(x)
 
-    plane.gj2 = numpy.ones(shape[1])
-    plane.gj3 = numpy.ones(shape[1])
+    plane.gj2 = numpy.ones(y)
+    plane.gj3 = numpy.ones(y)
 
-    plane.fi1 = numpy.zeros(shape[0])
-    plane.fi2 = numpy.ones(shape[0])
-    plane.fi3 = numpy.ones(shape[0])
+    plane.fi1 = numpy.zeros(x)
+    plane.fi2 = numpy.ones(x)
+    plane.fi3 = numpy.ones(x)
 
-    plane.fj1 = numpy.zeros(shape[1])
-    plane.fj2 = numpy.ones(shape[1])
-    plane.fj3 = numpy.ones(shape[1])
+    plane.fj1 = numpy.zeros(y)
+    plane.fj2 = numpy.ones(y)
+    plane.fj3 = numpy.ones(y)
 
     # calculate PML parameters
     for i in range(0, int(thick) ):
         xn = 0.33 * math.pow( (thick - i)/thick, 3.0 )
-        plane.gi2[i] = plane.gi2[plane.shape[0]-1-i] = 1.0 / (1.0 + xn)
-        plane.gi3[i] = plane.gi3[plane.shape[0]-1-i] = (1.0 - xn) / (1.0 + xn)
-        
-        #xn = 0.25 * math.pow( (thick - i - 0.5) / thick, 3.0 )
-        plane.fi1[i] = plane.fi1[plane.shape[1]-1-i] = xn
-        plane.fi2[i] = plane.fi2[plane.shape[1]-1-i] = 1.0 / (1.0 + xn)
-        plane.fi3[i] = plane.fi3[plane.shape[1]-1-i] = (1.0 - xn) / (1.0 + xn)
+        plane.gi2[i] = plane.gi2[-1-i] = 1.0 / (1.0 + xn)
+        plane.gi3[i] = plane.gi3[-1-i] = (1.0 - xn) / (1.0 + xn)
+        plane.fi1[i] = plane.fi1[-1-i] = xn
+        plane.fi2[i] = plane.fi2[-1-i] = 1.0 / (1.0 + xn)
+        plane.fi3[i] = plane.fi3[-1-i] = (1.0 - xn) / (1.0 + xn)
         
     for j in range(0, int(thick) ):
         xn = 0.33 * math.pow( (thick -j)/thick, 3.0 )
-        plane.gj2[j] = plane.gj2[plane.shape[1]-1-j] = 1.0 / (1.0 + xn)
-        plane.gj3[j] = plane.gj3[plane.shape[1]-1-j] = (1.0 - xn) / (1.0 + xn)
-
-        #xn = 0.25 * math.pow( (thick - j - 0.5 ) / thick, 3.0 )
-        plane.fj1[j] = plane.fj1[plane.shape[1]-1-j] = xn
-        plane.fj2[j] = plane.fj2[plane.shape[1]-1-j] = 1.0 / (1.0 + xn)
-        plane.fj3[j] = plane.fj3[plane.shape[1]-1-j] = (1.0 - xn) / (1.0 + xn)
+        plane.gj2[j] = plane.gj2[-1-j] = 1.0 / (1.0 + xn)
+        plane.gj3[j] = plane.gj3[-1-j] = (1.0 - xn) / (1.0 + xn)
+        plane.fj1[j] = plane.fj1[-1-j] = xn
+        plane.fj2[j] = plane.fj2[-1-j] = 1.0 / (1.0 + xn)
+        plane.fj3[j] = plane.fj3[-1-j] = (1.0 - xn) / (1.0 + xn)
     return None
 
 
@@ -149,12 +146,60 @@ class UPML(object):
     Unaxial Perfect Matched Layer object, storing g and f parameters for update equations
     """
     
-    def __init__(self, thick=8.0):
+    def __init__(self, plane, thick=8.0):
         """
 
         Arguments:
         -`thick`:
         """
         self.thick = thick
+        
+        (x, y) = plane.shape
+
+        self.gi2 = numpy.ones(x)
+        self.gi3 = numpy.ones(x)
+
+        self.gj2 = numpy.ones(y)
+        self.gj3 = numpy.ones(y)
+
+        self.fi1 = numpy.zeros(x)
+        
+        self.fi2 = numpy.ones(x)
+        self.fi3 = numpy.ones(x)
+
+        self.fj1 = numpy.zeros(y)
+        
+        self.fj2 = numpy.ones(y)
+        self.fj3 = numpy.ones(y)
+
+        self.calculate()
+
         return None
 
+
+    def calculate(self):
+        """
+        calculate g and f parameters of UPML itself
+        
+        Arguments:
+        - `self`:
+        """
+        thick = self.thick
+        
+        for i in range(0, int(thick) ):
+            xn = 0.33 * math.pow( (thick - i)/thick, 3 )
+            self.gi2[i] = self.gi2[-1-i] = 1.0 / (1.0 + xn)
+            self.gi3[i] = self.gi3[-1-i] = (1.0 - xn) / (1.0 + xn)
+            self.fi1[i] = self.fi1[-1-i] = xn
+            self.fi2[i] = self.fi2[-1-i] = 1.0 / (1.0 + xn)
+            self.fi3[i] = self.fi3[-1-i] = (1.0 - xn) / (1.0 + xn)
+        
+        for j in range(0, int(thick) ):
+            xn = 0.33 * math.pow( (thick -j)/thick, 3.0 )
+            self.gj2[j] = self.gj2[-1-j] = 1.0 / (1.0 + xn)
+            self.gj3[j] = self.gj3[-1-j] = (1.0 - xn) / (1.0 + xn)
+            self.fj1[j] = self.fj1[-1-j] = xn
+            self.fj2[j] = self.fj2[-1-j] = 1.0 / (1.0 + xn)
+            self.fj3[j] = self.fj3[-1-j] = (1.0 - xn) / (1.0 + xn)
+
+        return None
