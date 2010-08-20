@@ -138,8 +138,6 @@ class UPML(object):
         """
         calculate g and f parameters of UPML itself
         
-        Arguments:
-        - `self`:
         """
         thick = self.thick
         

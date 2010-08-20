@@ -130,28 +130,6 @@ def strip_pml(plane):
         item.fill(0.0)
     return None
 
-def plot_pml_params(plane, filename):
-    """
-    plot gi2, gi3, fi1, fi2, fi3, gj2, gj3, fj1, fj2, fj3 of PML
-    
-    Arguments:
-    - `plane`:
-    """
-    pylab.subplot(211)
-    for item in [plane.gi2, plane.gi3, plane.fi1, plane.fi2, plane.fi3]:
-        pylab.plot(item)
-    pylab.grid(True)
-    pylab.subplot(212)
-    for item in [plane.gj2, plane.gj3, plane.fj1, plane.fj2, plane.fj3]:
-        pylab.plot(item)
-    pylab.grid(True)
-    pylab.savefig(filename)
-    pylab.clf()
-    return None
-
-
-
-
 class BPML(object):
     """
     Berenger's PML object, storing g and f parameters for update equations
@@ -164,4 +142,28 @@ class BPML(object):
         - `thick`:
         """
         self.thick = thick
+        return None
+    
+
+    def enable(self):
+        """
+        enable myself
+        """
+        return self
+
+
+    def disable(self, ):
+        """
+        disable myself
+        """
+        return self
+
+
+    def plot(self, filename):
+        """
+        plot parameters of Berenger's PML
+
+        Arguments:
+        - `filename`:
+        """
         return None
