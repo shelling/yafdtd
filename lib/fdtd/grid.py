@@ -14,6 +14,7 @@ import pylab
 from scipy.constants import epsilon_0, mu_0
 from matplotlib import _pylab_helpers
 from fdtd.algorithm import onedim
+from fdtd.source import HardSource, TFSF
 
 # {{{
 class String(object):
@@ -48,6 +49,28 @@ class String(object):
         """
         onedim.update_hfield(self)
         return self
+
+    def update_abc(self):
+        """
+        update abc of the String instance
+        """
+        onedim.update_abc(self)
+        return self
+
+    def update_source(self, t):
+        """
+        write the new value of source into problem region
+        
+        Arguments:
+        - `t`: current timestep
+        """
+        if type(self.source) == HardSource:
+            self.efield[self.source.position] = self.source.function(t, *(self.source.options))
+        elif type(self.source) == TFSF:
+            # not yet implement
+            pass
+        return self
+
 
     def plot(self, pattern, id, range=[-1,1]):
         """

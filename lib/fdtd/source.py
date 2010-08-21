@@ -60,3 +60,38 @@ def sin_oft(t, f=1):
     - `f`: default is 1
     """
     return math.sin(t*f*math.pi/180)
+
+
+class HardSource(object):
+    """
+    Hard Source which updates grid directly.
+    """
+    
+    def __init__(self, function, options, position):
+        """
+        
+        Arguments:
+        - `function`:
+        - `options`:
+        - `position`:
+        """
+        self.function = function
+        self.options  = options
+        self.position = position
+        return None
+
+
+class TFSF(object):
+    """
+    Total Field / Scatter Field Source. Simple plane wave emulator.
+    """
+    
+    def __init__(self, function):
+        """
+        
+        
+        Arguments:
+        - `function`:
+        """
+        self.function = function
+        return None

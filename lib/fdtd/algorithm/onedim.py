@@ -71,16 +71,3 @@ def update_abc_right(string, abc={"m1":0, "m2":0}):
     return None
 
 
-
-def update_source(string, locate, source, params):
-    """
-    update source intensity on fdtd.String instance
-    
-    Arguments:
-    - `string`: fdtd.String instance containing fields and material data
-    - `locate`: the position where source would update
-    - `source`: source function
-    - `params`: array containing parameters would be passed to source
-    """
-    string.efield[locate] = source(*params) 
-    return None
