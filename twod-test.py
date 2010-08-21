@@ -5,20 +5,20 @@ import os, csv, re, gc
 
 from fdtd import source
 from fdtd.algorithm.twodim import freespace, upml
-from fdtd.grid import Plane
+from fdtd.grid import Plane, String
 from fdtd.utils import *
 
 plane = Plane( (31,31), "TM")
 upml.append_pml( plane )
-plane.pml.plot("/tmp/a.png")
+
+auxiliary = String(31)
 
 
-for t in range(0,100):
-    upml.update_efield( plane )
+for t in range(0,50):
+    plane.update_efield()
     plane.ezfield[plane.shape[0]/2, plane.shape[1]/2] = source.sin_oft(t, 10)
-    upml.update_hfield( plane )
-    save_field_surf(plane.ezfield, "result/twod-testing-surface-%.3d.png", t )
-    save_field(plane.ezfield, "result/twod-testing-%.3d.png", t, [-1,1])
+    plane.update_hfield()
+    plane.plot3d("result/twod-testing-surface-%.3d.png", t)
     print t
 
 if "Darwin" in os.uname():

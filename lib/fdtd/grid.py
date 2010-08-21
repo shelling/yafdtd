@@ -7,14 +7,15 @@ Plane as 2-D grid
 Cube as 3-D grid
 
 """
-
+import matplotlib
 import numpy
 import pylab
 
 from scipy.constants import epsilon_0, mu_0
-from matplotlib import _pylab_helpers
-from fdtd.algorithm import onedim
+from matplotlib import _pylab_helpers, cm
+from fdtd.algorithm import onedim, twodim, threedim
 from fdtd.source import HardSource, TFSF
+
 
 # {{{
 class String(object):
@@ -123,6 +124,83 @@ class Plane(object):
             pass
 
         return None
+
+    def update_efield(self):
+        """
+        update efield of the Plane instance
+        """
+        if type(self.pml) == twodim.upml.UPML:
+            twodim.upml.update_efield(self)
+        elif type(self.pml) == twodim.bpml.BPML:
+            # not yet implement
+            pass
+        return self
+
+    def update_hfield(self):
+        """
+        update hfield of the Plane instance
+        """
+        if type(self.pml) == twodim.upml.UPML:
+            twodim.upml.update_hfield(self)
+        elif type(self.pml) == twodim.bpml.BPML:
+            # not yet implement
+            pass
+        return self
+
+
+
+    def update_source(self, t):
+        """
+        write the new value of souce into auxiliary
+        
+        Arguments:
+        - `t`:
+        """
+        return self
+
+    def plot(self, pattern, id, range=[-1,1]):
+        """
+        plot the Plane instance to a file of 2-D view
+        
+        Arguments:
+        - `pattern`:
+        - `id`:
+        - `range`:
+        """
+        fig = pylab.figure()
+        if self.transverse == "TM":
+            field = self.ezfield
+        elif self.transverse == "TE":
+            field = self.hzfield
+        im = fig.gca().imshow( field, norm=matplotlib.colors.Normalize( *(range + [True]) ) )
+        fig.colorbar(im)
+        fig.savefig(pattern % id)
+        _pylab_helpers.Gcf.destroy_fig(fig)
+        return self
+    def plot3d(self, pattern, id, range=[-1,1]):
+        """
+        plot the Plane instance to a file of 3-D view
+        
+        Arguments:
+        - `pattern`:
+        - `id`:
+        - `range`:
+        """
+        if self.transverse == "TM":
+            field = self.ezfield
+        elif self.transverse == "TE":
+            field = self.hzfield
+
+        x = numpy.arange(0, self.shape[0])
+        y = numpy.arange(0, self.shape[1])
+        x, y = numpy.meshgrid(x, y)
+        fig = pylab.figure()
+        ax = fig.gca(projection="3d")
+        ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
+        ax.set_zlim3d(range)
+        fig.savefig(pattern % id)
+        _pylab_helpers.Gcf.destroy_fig(fig)
+        return self
 
 
 # }}}
