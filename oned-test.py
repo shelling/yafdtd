@@ -11,11 +11,11 @@ from fdtd.utils import *
 string = String(31)
 
 for t in range(1,70):
-    update_efield(string)
+    string.update_efield()
     update_abc(string)
     update_source(string, string.shape[0]/2, source.sin_oft, (t,5))
-    update_hfield(string)
-    save_field(string.efield, "result/oned-testing-%.3d.png", t)
+    string.update_hfield()
+    string.plot("result/oned-testing-%.3d.png", t)
     print t
 
 if "Darwin" in os.uname():

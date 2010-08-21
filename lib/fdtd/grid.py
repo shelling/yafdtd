@@ -9,7 +9,11 @@ Cube as 3-D grid
 """
 
 import numpy
+import pylab
+
 from scipy.constants import epsilon_0, mu_0
+from matplotlib import _pylab_helpers
+from fdtd.algorithm import onedim
 
 # {{{
 class String(object):
@@ -31,6 +35,35 @@ class String(object):
         self.shape  = self.efield.shape
         pass
 
+    def update_efield(self):
+        """
+        update efield of the String instance
+        """
+        onedim.update_efield(self)
+        return self
+
+    def update_hfield(self):
+        """
+        update hfield of the String instance
+        """
+        onedim.update_hfield(self)
+        return self
+
+    def plot(self, pattern, id, range=[-1,1]):
+        """
+        plot the String instance to a file
+        
+        Arguments:
+        - `pattern`: filename pattern
+        """
+        fig = pylab.figure()
+        ax = fig.gca()
+        ax.plot(self.efield)
+        ax.set_ylim(range)
+        ax.set_xlim(0,self.shape[0]-1)
+        fig.savefig(pattern % id)
+        _pylab_helpers.Gcf.destroy_fig(fig)
+        return None
 
 # }}}
 
@@ -67,6 +100,7 @@ class Plane(object):
             pass
 
         return None
+
 
 # }}}
 
