@@ -110,6 +110,7 @@ class Plane(object):
 
         self.shape = shape
         self.transverse = transverse
+        self.ga = numpy.ones(shape)
 
         if transverse == "TE":
             self.hzfield = numpy.zeros(shape)
@@ -117,13 +118,28 @@ class Plane(object):
             self.eyfield = numpy.zeros(shape)
         elif transverse == "TM":
             self.ezfield = numpy.zeros(shape)
+            self.dzfield = numpy.zeros(shape)
             self.hxfield = numpy.zeros(shape)
             self.hyfield = numpy.zeros(shape)
+            self.ihx     = numpy.zeros(shape)
+            self.ihy     = numpy.zeros(shape)
         else:
             # raise error here
             pass
 
         return None
+
+    def append(self, object):
+        """
+        append extra object onto the Plane instance.
+        The object can be a instance of PML, Geometry, Source, etc.
+        
+        Arguments:
+        - `object`:
+        """
+        object.stick(self)
+        return self
+
 
     def update_efield(self):
         """
@@ -156,6 +172,23 @@ class Plane(object):
         Arguments:
         - `t`:
         """
+        if type(self.source) == HardSource:
+            # not yet implement
+            pass
+        elif type(self.source) == TFSF:
+            length    = self.source.length
+            edge      = self.source.thick
+            auxiliary = self.source.auxiliary
+            auxiliary.update_efield().update_abc().update_source(t).update_hfield()
+            for i in range(edge,length-edge):
+                self.dzfield[i,edge] = self.dzfield[i,edge] + 0.5 * auxiliary.hfield[edge-1]
+                self.dzfield[i,length-edge] = self.dzfield[i,length-edge] - 0.5 * auxiliary.hfield[length-edge]
+            for i in range(edge,length-edge):
+                self.hxfield[i,edge-1] = self.hxfield[i,edge-1] + 0.5 * auxiliary.efield[edge]
+                self.hxfield[i,length-edge]   = self.hxfield[i,length-edge]   - 0.5 * auxiliary.efield[length-edge]
+            for j in range(edge,length-edge):
+                self.hyfield[edge-1,j] = self.hyfield[edge-1,j] - 0.5 * auxiliary.efield[j]
+                self.hyfield[length-edge,j]   = self.hyfield[length-edge,j]   + 0.5 * auxiliary.efield[j]
         return self
 
     def plot(self, pattern, id, range=[-1,1]):

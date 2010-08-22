@@ -6,6 +6,8 @@
 #   polynomial                     (not yet)
 
 import math
+import fdtd
+
 
 from mpmath import *
 mp.dps = 50
@@ -80,18 +82,32 @@ class HardSource(object):
         self.position = position
         return None
 
+    def stick(self, grid):
+        """
+        stick the HardSource instance onto a grid
+        
+        Arguments:
+        - `grid`:
+        """
+        return None
+
+
 
 class TFSF(object):
     """
     Total Field / Scatter Field Source. Simple plane wave emulator.
     """
     
-    def __init__(self, function):
+    def __init__(self, length, function, thick):
         """
         
         
         Arguments:
         - `function`:
         """
+        self.length   = length
         self.function = function
+        self.thick    = thick
+        self.auxiliary = fdtd.grid.String(length)
+        self.auxiliary.source = HardSource(sin_oft, (5,), 3)
         return None

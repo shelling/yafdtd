@@ -29,7 +29,8 @@ def update_efield( plane, region=None ):
     elif plane.transverse == "TM":
         for i in range(1,x-1):
             for j in range(1,y-1):
-                plane.ezfield[i,j] = pml.gi3[i] * pml.gj3[j] * plane.ezfield[i,j] + pml.gi2[i] * pml.gj2[j] * 0.5 * ( plane.hyfield[i,j] - plane.hyfield[i-1,j] - plane.hxfield[i,j] + plane.hxfield[i,j-1] )
+                plane.dzfield[i,j] = pml.gi3[i] * pml.gj3[j] * plane.dzfield[i,j] + pml.gi2[i] * pml.gj2[j] * 0.5 * ( plane.hyfield[i,j] - plane.hyfield[i-1,j] - plane.hxfield[i,j] + plane.hxfield[i,j-1] )
+                plane.ezfield[i,j] = plane.ga[i,j] * plane.dzfield[i,j]
     return None
 
 def update_hfield( plane, region=None ):
@@ -60,51 +61,12 @@ def update_hfield( plane, region=None ):
 
 
 
-def append_pml( plane, thick=8 ):
-    """
-    append perfect matched layer and related parameters to surround of problem region
-
-    parameters of PML itself:
-    gi2, gi3, fi1, fi2, fi3
-    gj2, gj3, fj1, fj2, fj3
-
-    other parameters:
-    ihx, ihy
-    
-    Arguments:
-    - `plane`: fdtd.grid.Plane instance
-    - `thick`: the number of cells PML would occupy
-    """
-    if plane.shape[0] < thick * 2 or plane.shape[1] < thick * 2:
-        # raise error here
-        pass
-    # append parameters for BPML
-    plane.pml = UPML(plane, thick)
-
-    (x,y) = plane.shape
-    
-    plane.ihx = numpy.zeros(plane.shape)
-    plane.ihy = numpy.zeros(plane.shape)
-    return None
-
-
-def strip_pml(plane):
-    """
-    strip UPML from plane instance
-    
-    Arguments:
-    - `plane`:
-    """
-    plane.pml = None
-    return None
-
-
 class UPML(object):
     """
     Unaxial Perfect Matched Layer object, storing g and f parameters for update equations
     """
     
-    def __init__(self, plane, thick=8.0):
+    def __init__(self, shape, thick=8):
         """
 
         Arguments:
@@ -112,8 +74,9 @@ class UPML(object):
         -`thick`:
         """
         self.thick = thick
+        self.shape = shape
         
-        (x, y) = plane.shape
+        (x, y) = shape
 
         self.gi2 = numpy.ones(x)
         self.gi3 = numpy.ones(x)
@@ -201,5 +164,22 @@ class UPML(object):
         pylab.clf()
         return None
 
-
+    def stick(self, plane):
+        """
+        append the UPML instance to a Plane instance
         
+        Arguments:
+        - `plane`: the Plane instance would append the UPML instance
+        """
+        self.host = plane
+        plane.pml = self
+        return None
+
+    def strip(self, ):
+        """
+        strip the UPML instance itself from a Plane instance
+        """
+        self.host.pml = None
+        self.host = None
+        return None
+
