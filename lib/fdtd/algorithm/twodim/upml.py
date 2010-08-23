@@ -33,6 +33,15 @@ def update_efield( plane, region=None ):
                 plane.ezfield[i,j] = plane.ga[i,j] * plane.dzfield[i,j]
     return None
 
+def update_dfield(self, region=None ):
+    """
+    
+    Arguments:
+    - `region`:
+    """
+    return None
+
+
 def update_hfield( plane, region=None ):
     """
     2-D field update equation upon Unaxial PML
@@ -57,6 +66,14 @@ def update_hfield( plane, region=None ):
                 curl_e = plane.ezfield[i+1,j] - plane.ezfield[i,j]
                 plane.ihy[i,j] = plane.ihy[i,j] + curl_e                
                 plane.hyfield[i,j] = pml.fi3[i] * plane.hyfield[i,j] + pml.fi2[i] * 0.5 * curl_e + pml.fj1[j] * plane.ihy[i,j]
+    return None
+
+def update_bfield(self, region=None):
+    """
+    
+    Arguments:
+    - `region`:
+    """
     return None
 
 

@@ -89,6 +89,7 @@ class HardSource(object):
         Arguments:
         - `grid`:
         """
+        grid.source = self
         return None
 
 
@@ -110,4 +111,14 @@ class TFSF(object):
         self.thick    = thick
         self.auxiliary = fdtd.grid.String(length)
         self.auxiliary.source = HardSource(sin_oft, (5,), 3)
+        return None
+
+    def stick(self, grid):
+        """
+        append the TFSF instance to a grid instance
+        
+        Arguments:
+        - `grid`:
+        """
+        grid.source = self
         return None
