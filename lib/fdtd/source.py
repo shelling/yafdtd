@@ -7,6 +7,7 @@
 
 import math
 import fdtd
+import numpy
 
 
 from mpmath import *
@@ -33,7 +34,14 @@ def polynomial_pulse_pp(t):
 
 # guassian source and its 1-order derivative
 def gaussian(t, sigma, mean):
-    return exp(-1 * (t - mean)**2 / (2 * sigma**2)) / (sqrt(2 * pi) * sigma)
+    if type(t) == type(1):
+        return exp(-1 * (t - mean)**2 / (2 * sigma**2)) / (sqrt(2 * pi) * sigma)
+    elif type(t) == numpy.ndarray:
+        res = t.copy()
+        for i in range(0,len(res)):
+            res[i] = exp(-1 * (res[i] - mean)**2 / (2 * sigma**2)) / (sqrt(2 * pi) * sigma)
+        return res
+    
 
 def gaussian_p(t, sigma, mean):
     return ( (mean - t) / sqrt(2 * pi) * sigma**3 ) * exp( -1 * (t - mean)**2 / (2*sigma**2) )
