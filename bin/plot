@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
-import matplotlib, pylab, numpy, h5py, os, threading, Queue
+import matplotlib, pylab, numpy, h5py, os
+from multiprocessing import Process
 from matplotlib import _pylab_helpers, cm
 
+processes = []
+
 def plot(field, pattern, id, range=[-1,1]):
+      print id
       fig = pylab.figure()
       ax = fig.gca()
       ax.plot(field)
@@ -16,7 +20,13 @@ def plot(field, pattern, id, range=[-1,1]):
 hdf5 = h5py.File("result/result.hdf5","r")
 
 for t in hdf5["timeline"].values():
-    print t.name
-    plot( numpy.array(t.get("ex")), "result/oned-testing-%.3s.png", os.path.basename(t.name))
+    processes.append(Process(target=plot, args=(numpy.array(t.get("ex")), "result/testing-%.3s.png", os.path.basename(t.name))))
+    # plot( numpy.array(t.get("ex")), "result/oned-testing-%.3s.png", os.path.basename(t.name))
+
+for p in processes:
+  p.start()
+
+for p in processes:
+  p.join()
 
 hdf5.close()
