@@ -15,7 +15,7 @@ def plot():
 
 
 threads = []
-for x in range(8):
+for x in range(4):
   threads.append(threading.Thread(target=plot))
 
 for t in threads:
