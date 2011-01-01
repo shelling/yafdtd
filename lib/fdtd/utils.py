@@ -1,6 +1,7 @@
 import matplotlib
 import pylab
 import numpy
+import os
 import shutil
 
 from matplotlib import cm, _pylab_helpers, interactive
@@ -63,10 +64,10 @@ def save_field_surf(field, filename_pattern, id, intensity=[-1,1]):
     _pylab_helpers.Gcf.destroy_fig(fig)
     return None
 
+filebrowser = {"Darwin": "open", "Linux": "nautilus"}
 def open(dir):
   """
   open directory in gui file browser is possible
   """
-  filebrowser = {"Darwin": "open", "Linux": "nautilus"}
   os.system(filebrowser[os.uname()[0]]+" "+dir)
   return None
