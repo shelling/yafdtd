@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 import convention
-import os, csv, re, shutil
+import os, csv, re, shutil, h5py
 
 from fdtd import source
 from fdtd.algorithm.onedim import *
@@ -15,12 +15,20 @@ if os.path.isdir("result"):
   shutil.rmtree("result")
 os.mkdir("result")
 
-for t in range(1,70):
+hdf5 = h5py.File("result/result.hdf5","w")
+hdf5.require_group("timeline")
+
+for t in range(0,70):
     string.update_efield()\
           .update_abc()\
           .update_source(t)\
           .update_hfield()\
-          .plot("result/oned-testing-%.3d.png", t)
+          # .plot("result/oned-testing-%.3d.png", t)
+    hdf5.require_group("timeline/"+str(t))
+    hdf5["timeline"][str(t)]["ex"] = string.efield
+    hdf5["timeline"][str(t)]["hy"] = string.hfield
     print t
+
+hdf5.close()
 
 open("result")
