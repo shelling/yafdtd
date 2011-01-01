@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+import matplotlib, pylab, numpy, h5py, os, threading, Queue
+from matplotlib import _pylab_helpers, cm
+
+def plot(field, pattern, id, range=[-1,1]):
+      fig = pylab.figure()
+      ax = fig.gca()
+      ax.plot(field)
+      ax.set_ylim(range)
+      ax.set_xlim(0,field.shape[0]-1)
+      fig.savefig(pattern % id)
+      _pylab_helpers.Gcf.destroy_fig(fig)
+      return None
+
+hdf5 = h5py.File("result/result.hdf5","r")
+
+for t in hdf5["timeline"].values():
+    print t.name
+    plot( numpy.array(t.get("ex")), "result/oned-testing-%.3s.png", os.path.basename(t.name))
+
+hdf5.close()
