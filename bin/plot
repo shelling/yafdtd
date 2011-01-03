@@ -24,12 +24,12 @@ for t in hdf5["timeline"].values():
     # plot( numpy.array(t.get("ex")), "result/oned-testing-%.3s.png", os.path.basename(t.name))
 
 head = 0
-step = 10
+step = 100
 while head < len(processes):
-    head = head + step
     for p in processes[head:head+step]:
       p.start()
     for p in processes[head:head+step]:
       p.join()
+    head += step
 
 hdf5.close()
