@@ -6,10 +6,10 @@ import matplotlib
 import pylab
 
 def fft(t, timedomain, sampleperiod):
-  n = len(t)
-  f = numpy.arange(-n/2,n/2)/(sampleperiod*n)
-  freqdomain = numpy.abs(numpy.fft.fftshift(numpy.fft.fft(timedomain)))
-  return f, freqdomain
+    n = len(t)
+    f = numpy.arange(-n/2,n/2)/(sampleperiod*n)
+    freqdomain = numpy.abs(numpy.fft.fftshift(numpy.fft.fft(timedomain)))
+    return f, freqdomain
 
 DEBUG = 1
 
