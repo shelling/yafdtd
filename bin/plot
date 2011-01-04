@@ -1,29 +1,12 @@
 #!/usr/bin/env python
 
-import matplotlib, pylab, numpy, h5py, os
+import sys, matplotlib, pylab, numpy, h5py, os
+sys.path.append("lib")
 from multiprocessing import Process
 from matplotlib import _pylab_helpers, cm
+from fdtd.utils import plot, split
 
 processes = []
-
-def plot(field, pattern, id, range=[-1,1]):
-    print id
-    fig = pylab.figure()
-    ax = fig.gca()
-    ax.plot(field)
-    ax.set_ylim(range)
-    ax.set_xlim(0,field.shape[0]-1)
-    fig.savefig(pattern % id)
-    _pylab_helpers.Gcf.destroy_fig(fig)
-    return None
-
-def split(alist, length):
-    result = []
-    head = 0
-    while head < len(alist):
-      result.append(alist[head:head+length])
-      head += length
-    return result
 
 hdf5 = h5py.File("result/result.hdf5","r")
 

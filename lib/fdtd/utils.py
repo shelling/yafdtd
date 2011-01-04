@@ -13,6 +13,15 @@ def fft(t, timedomain, sampleperiod):
     freqdomain = numpy.abs(numpy.fft.fftshift(numpy.fft.fft(timedomain)))
     return f, freqdomain
 
+def plot(field, pattern, id, range=[-1,1]):
+    fig = pylab.figure()
+    ax = fig.gca()
+    ax.plot(field)
+    ax.set_ylim(range)
+    ax.set_xlim(0,field.shape[0]-1)
+    fig.savefig(pattern % id)
+    _pylab_helpers.Gcf.destroy_fig(fig)
+    return None
 
 def save_field(field, filename_pattern, id, intensity=[-1,1]):
     """
@@ -38,7 +47,6 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         im = fig.gca().imshow( field, norm=matplotlib.colors.Normalize( *(intensity + [True]) ) )
         fig.colorbar(im)
         fig.savefig(filename_pattern % id)
-        # _pylab_helpers.Gcf.destroy_all()
         _pylab_helpers.Gcf.destroy_fig(fig)
         
     elif len(field.shape) == 3:
@@ -49,7 +57,7 @@ def save_field(field, filename_pattern, id, intensity=[-1,1]):
         pass
     return None
 
-def save_field_surf(field, filename_pattern, id, intensity=[-1,1]):
+def surf(field, filename_pattern, id, intensity=[-1,1]):
     """
     shortcut for saving field as 3D plot through matplotlib
 
@@ -67,14 +75,22 @@ def save_field_surf(field, filename_pattern, id, intensity=[-1,1]):
     ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
     ax.set_zlim3d([-1,1])
     fig.savefig(filename_pattern % id)
-    # _pylab_helpers.Gcf.destroy_all()
     _pylab_helpers.Gcf.destroy_fig(fig)
     return None
 
+def split(alist, length):
+    result = []
+    head = 0
+    while head < len(alist):
+      result.append(alist[head:head+length])
+      head += length
+    return result
+
 filebrowser = {"Darwin": "open", "Linux": "nautilus"}
 def open(dir):
-  """
-  open directory in gui file browser is possible
-  """
-  os.system(filebrowser[os.uname()[0]]+" "+dir)
-  return None
+    """
+    open directory in gui file browser is possible
+    """
+    app = filebrowser[os.uname()[0]]
+    os.system(app+" "+dir) if app else None
+    return None
