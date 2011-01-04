@@ -9,6 +9,10 @@ from fdtd.grid import Plane, String
 from fdtd.utils import *
 from scipy.constants import c, epsilon_0
 
+if os.path.isdir("result"):
+  shutil.rmtree("result")
+os.mkdir("result")
+
 length = 61
 edge = 8
 dx = 0.01
@@ -34,5 +38,4 @@ for t in range(0,300):
     plane.plot3d("result/twod-testing-%.3d.png", t, range=[-3,3])
     print t
 
-if "Darwin" in os.uname():
-    os.system("open result")
+open("result")
