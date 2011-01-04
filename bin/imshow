@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import sys, matplotlib, pylab, numpy, h5py, os
+sys.path.append("lib")
+
+from multiprocessing import Process
+from matplotlib import _pylab_helpers, cm
+from fdtd.utils import imshow, split
+
+processes = []
+
+hdf5 = h5py.File("result/result.hdf5","r")
+
+for t in hdf5["timeline"].values():
+    processes.append(Process(target=imshow, args=(numpy.array(t.get("ez")), "result/twod-test-%.3s.png", os.path.basename(t.name))))
+
+for sub in split(processes, 60):
+    for p in sub:
+        p.start()
+    for p in sub:
+        p.join()
+
+hdf5.close()

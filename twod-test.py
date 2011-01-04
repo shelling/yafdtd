@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
-import convention
-import os, csv, re, gc, math
+
+import sys, os, math, h5py, numpy
+sys.path.append("lib")
 
 from fdtd.source import HardSource, TFSF, sin_oft
 from fdtd.algorithm.twodim import freespace, upml
@@ -12,6 +13,9 @@ from scipy.constants import c, epsilon_0
 if os.path.isdir("result"):
   shutil.rmtree("result")
 os.mkdir("result")
+
+hdf5 = h5py.File("result/result.hdf5", "w")
+hdf5.require_group("timeline")
 
 length = 61
 edge = 8
@@ -35,7 +39,11 @@ for t in range(0,300):
     plane.update_efield()
     plane.update_source(t)
     plane.update_hfield()
-    plane.plot3d("result/twod-testing-%.3d.png", t, range=[-3,3])
+    # surf(plane.ezfield, "result/twod-testing-%.3d.png", t, intensity=[-3,3])
+    hdf5.require_group("timeline/"+str(t))
+    hdf5["timeline"][str(t)]["ez"] = plane.ezfield
     print t
+
+hdf5.close()
 
 open("result")
