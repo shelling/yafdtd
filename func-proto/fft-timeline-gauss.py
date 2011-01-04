@@ -3,19 +3,13 @@
 import sys, numpy, scipy, matplotlib, pylab
 sys.path.append("./lib")
 from fdtd.source import gaussian_oft
-
-def fft(t, timedomain, sampleperiod):
-    n = len(t)
-    f = numpy.arange(-n/2,n/2)/(sampleperiod*n)
-    freqdomain = numpy.abs(numpy.fft.fftshift(numpy.fft.fft(timedomain)))
-    return f, freqdomain
+from fdtd.utils  import fft
 
 DEBUG = 0
 
 n = numpy.float(2**18)
-freq = 25
 
-dt = 1./800
+dt = 1./1024
 
 t = numpy.arange(n)*dt
 timedomain = [gaussian_oft(i, 100, 1) for i in t]

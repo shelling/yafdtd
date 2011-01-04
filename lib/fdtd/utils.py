@@ -7,6 +7,13 @@ import shutil
 from matplotlib import cm, _pylab_helpers, interactive
 from mpl_toolkits.mplot3d import Axes3D
 
+def fft(t, timedomain, sampleperiod):
+    n = len(t)
+    f = numpy.arange(-n/2,n/2)/(sampleperiod*n)
+    freqdomain = numpy.abs(numpy.fft.fftshift(numpy.fft.fft(timedomain)))
+    return f, freqdomain
+
+
 def save_field(field, filename_pattern, id, intensity=[-1,1]):
     """
     shortcut for saving file through matplotlib

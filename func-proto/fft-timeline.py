@@ -1,22 +1,15 @@
 #!/usr/bin/env python
 
-import numpy
-import scipy
-import matplotlib
-import pylab
-
-def fft(t, timedomain, sampleperiod):
-    n = len(t)
-    f = numpy.arange(-n/2,n/2)/(sampleperiod*n)
-    freqdomain = numpy.abs(numpy.fft.fftshift(numpy.fft.fft(timedomain)))
-    return f, freqdomain
+import sys, numpy, scipy, matplotlib, pylab
+sys.path.append("./lib")
+from fdtd.utils  import fft
 
 DEBUG = 1
 
 n = numpy.float(2**10)
 freq = 25
 
-dt = 1./800
+dt = 1./1024
 
 t = numpy.arange(n)*dt
 timedomain = numpy.cos(2*numpy.pi*freq*t)
