@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
-import convention
-import os, csv, re, shutil, h5py
+
+import sys, os, csv, re, shutil, h5py
+sys.path.append("./lib")
 
 from fdtd import source
 from fdtd.algorithm.onedim import *
