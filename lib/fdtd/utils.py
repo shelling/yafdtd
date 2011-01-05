@@ -68,6 +68,14 @@ def batch(processes, size=30):
             p.join()
     return None
 
+def order(alist):
+    length = len(alist)
+    result = 0
+    while length > 1:
+        length /= 10.0
+        result += 1
+    return result
+
 filebrowser = {"Darwin": "open", "Linux": "nautilus"}
 def open(dir):
     """

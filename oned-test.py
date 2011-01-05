@@ -17,6 +17,7 @@ if os.path.isdir("result"):
 os.mkdir("result")
 
 hdf5 = h5py.File("result/result.hdf5","w")
+hdf5.attrs["name"] = "oned-test"
 hdf5.require_group("timeline")
 
 for t in range(0,70):

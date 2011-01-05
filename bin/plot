@@ -5,12 +5,13 @@ sys.path.append("lib")
 matplotlib.use("Agg")
 
 from multiprocessing import Process
-from fdtd.utils import plot, batch
+from fdtd.utils import plot, batch, order
 
+hdf5 = h5py.File(sys.argv[1],"r")
 
-hdf5 = h5py.File("result/result.hdf5","r")
+pattern = "result/%s-%%.%ds.png" % (hdf5.attrs["name"], order(hdf5["timeline"]))
 
-processes = [Process(target=plot, args=(t.get("ex"), "result/testing-%.3s.png", os.path.basename(t.name))) for t in hdf5["timeline"].values()]
+processes = [Process(target=plot, args=(t.get("ex"), pattern, os.path.basename(t.name))) for t in hdf5["timeline"].values()]
 
 batch(processes, 30) 
 
