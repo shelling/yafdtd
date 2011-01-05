@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 
-import sys, matplotlib, numpy, h5py, os
+import sys, matplotlib, h5py, os
 sys.path.append("lib")
 matplotlib.use("Agg")
 
 from multiprocessing import Process
-from matplotlib import _pylab_helpers, cm
 from fdtd.utils import surf, split
-
-processes = []
 
 hdf5 = h5py.File("result/result.hdf5","r")
 
-for t in hdf5["timeline"].values():
-    processes.append(Process(target=surf, args=(numpy.array(t.get("ez")), "result/twod-test-%.3s.png", os.path.basename(t.name))))
+processes = [Process(target=surf, args=(t.get("ez"), "result/twod-test-%.3s.png", os.path.basename(t.name))) for t in hdf5["timeline"].values()]
 
 for sub in split(processes, 60):
     for p in sub:
