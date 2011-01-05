@@ -13,7 +13,6 @@ prepare(outdir)
 shape = list(hdf5["timeline/1/ex"].shape)
 shape.append(len(hdf5["timeline"]))
 twister = numpy.zeros(shape)
-print twister.shape
 
 (x,timelength) = twister.shape
 for t in range(timelength):
@@ -21,8 +20,6 @@ for t in range(timelength):
         twister[i,t] = hdf5["timeline"][str(t)].get("ex")[i]
 
 space = twister.tolist()
-print len(space)
-print space[0]
 
 for i in range(len(space)):
     plot(numpy.array(space[i]), "%s/space-%d.png", (outdir, i))

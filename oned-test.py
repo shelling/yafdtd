@@ -10,7 +10,7 @@ from fdtd.grid import String
 from fdtd.utils import *
 
 string = String(31)
-string.source = source.HardSource(source.sin_oft, (5,), string.shape[0]/2)
+string.source = source.HardSource(source.sin_oft, (0.01,), string.shape[0]/2)
 
 prepare("result")
 

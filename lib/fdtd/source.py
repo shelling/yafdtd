@@ -69,7 +69,7 @@ def sin_oft(t, f=1):
     - `t`: require
     - `f`: default is 1
     """
-    return math.sin(t*f*math.pi/180)
+    return math.sin(2.0*math.pi*f*t)
 
 
 class HardSource(object):
