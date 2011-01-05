@@ -1,18 +1,24 @@
 #!/usr/bin/env python
 
-import sys, h5py, os, matplotlib
+import sys, h5py, matplotlib
 sys.path.append("lib")
 matplotlib.use("Agg")
 
+from os.path import dirname, basename
 from multiprocessing import Process
-from fdtd.utils import plot, batch, order
+from fdtd.utils import plot, batch, order, open, prepare
 
 hdf5 = h5py.File(sys.argv[1],"r")
 
-pattern = "result/%s-%%.%ds.png" % (hdf5.attrs["name"], order(hdf5["timeline"]))
+outdir = dirname(hdf5.filename) + "/charts"
+prepare(outdir)
 
-processes = [Process(target=plot, args=(t.get("ex"), pattern, os.path.basename(t.name))) for t in hdf5["timeline"].values()]
+pattern = "%s/%s-%%.%ds.png" % (outdir, hdf5.attrs["name"], order(hdf5["timeline"]))
 
-batch(processes, 30) 
+processes = [Process(target=plot, args=(t.get("ex"), pattern, basename(t.name))) for t in hdf5["timeline"].values()]
+
+batch(processes, 60)
 
 hdf5.close()
+
+open(outdir)

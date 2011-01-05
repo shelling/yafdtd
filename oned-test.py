@@ -12,9 +12,7 @@ from fdtd.utils import *
 string = String(31)
 string.source = source.HardSource(source.sin_oft, (5,), string.shape[0]/2)
 
-if os.path.isdir("result"):
-  shutil.rmtree("result")
-os.mkdir("result")
+prepare("result")
 
 hdf5 = h5py.File("result/result.hdf5","w")
 hdf5.attrs["name"] = "oned-test"

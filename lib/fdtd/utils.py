@@ -84,3 +84,9 @@ def open(dir):
     app = filebrowser[os.uname()[0]]
     os.system(app+" "+dir) if app else None
     return None
+
+def prepare(outdir):
+    shutil.rmtree(outdir) if os.path.isdir(outdir) else None
+    os.remove(outdir) if os.path.isfile(outdir) else None
+    os.mkdir(outdir)
+

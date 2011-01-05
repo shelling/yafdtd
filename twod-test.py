@@ -10,11 +10,10 @@ from fdtd.grid import Plane, String
 from fdtd.utils import *
 from scipy.constants import c, epsilon_0
 
-if os.path.isdir("result"):
-  shutil.rmtree("result")
-os.mkdir("result")
+prepare("result")
 
 hdf5 = h5py.File("result/result.hdf5", "w")
+hdf5.attrs["name"] = "twod-test"
 hdf5.require_group("timeline")
 
 length = 61
