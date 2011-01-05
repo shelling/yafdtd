@@ -118,7 +118,7 @@ class TFSF(object):
         self.function = function
         self.thick    = thick
         self.auxiliary = fdtd.grid.String(length)
-        self.auxiliary.source = HardSource(sin_oft, (5,), 3)
+        self.auxiliary.source = HardSource(sin_oft, (0.01,), 3)
         return None
 
     def stick(self, grid):
