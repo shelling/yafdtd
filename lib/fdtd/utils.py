@@ -88,5 +88,5 @@ def open(dir):
 def prepare(outdir):
     shutil.rmtree(outdir) if os.path.isdir(outdir) else None
     os.remove(outdir) if os.path.isfile(outdir) else None
-    os.mkdir(outdir)
+    os.makedirs(outdir)
 
