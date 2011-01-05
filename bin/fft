@@ -7,21 +7,15 @@ from fdtd.utils import fft, prepare, open, plot
 from os.path import dirname, basename
 
 hdf5 = h5py.File(sys.argv[1], "r")
+
 outdir = dirname(sys.argv[1])+"/fftcharts"
 prepare(outdir)
 
-shape = list(hdf5["timeline/1/ex"].shape)
-shape.append(len(hdf5["timeline"]))
-twister = numpy.zeros(shape)
+timeline = [hdf5["timeline"][str(t)].get("ex") for t in range(len(hdf5["timeline"]))]
 
-(x,timelength) = twister.shape
-for t in range(timelength):
-    for i in range(x):
-        twister[i,t] = hdf5["timeline"][str(t)].get("ex")[i]
+twister = numpy.array(timeline).transpose()
 
-space = twister.tolist()
-
-for i in range(len(space)):
-    plot(numpy.array(space[i]), "%s/space-%d.png", (outdir, i))
+for i in range(len(twister)):
+    plot(twister[i], "%s/space-%d.png", (outdir, i))
 
 open(outdir)
