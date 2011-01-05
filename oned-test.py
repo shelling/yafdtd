@@ -12,11 +12,12 @@ from fdtd.utils import *
 string = String(31)
 string.source = source.HardSource(source.sin_oft, (0.01,), string.shape[0]/2)
 
-prepare("result")
 
 name = "oned-test"
+outdir = "result/%s" % name
+prepare(outdir)
 
-hdf5 = h5py.File("result/%s.hdf5" % name,"w")
+hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name),"w")
 hdf5.attrs["name"] = name
 hdf5.require_group("timeline")
 
@@ -33,4 +34,4 @@ for t in range(0,200):
 
 hdf5.close()
 
-open("result")
+open(outdir)
