@@ -10,11 +10,12 @@ from fdtd.grid import Plane, String
 from fdtd.utils import *
 from scipy.constants import c, epsilon_0
 
-prepare("result")
 
 name = "twod-test"
+outdir = "result/%s" % name
+prepare(outdir)
 
-hdf5 = h5py.File("result/%s.hdf5" % name, "w")
+hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name), "w")
 hdf5.attrs["name"] = name 
 hdf5.require_group("timeline")
 
@@ -47,4 +48,4 @@ for t in range(0,300):
 
 hdf5.close()
 
-open("result")
+open(outdir)
