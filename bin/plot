@@ -8,17 +8,16 @@ from multiprocessing import Process
 from matplotlib import _pylab_helpers, cm
 from fdtd.utils import plot, split
 
-processes = []
 
 hdf5 = h5py.File("result/result.hdf5","r")
 
-for t in hdf5["timeline"].values():
-    processes.append(Process(target=plot, args=(numpy.array(t.get("ex")), "result/testing-%.3s.png", os.path.basename(t.name))))
+processes = [Process(target=plot, args=(t.get("ex"), "result/testing-%.3s.png", os.path.basename(t.name))) for t in hdf5["timeline"].values()]
 
 for sub in split(processes, 30):
     for p in sub:
       p.start()
     for p in sub:
       p.join()
+    
 
 hdf5.close()
