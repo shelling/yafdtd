@@ -5,16 +5,12 @@ sys.path.append("lib")
 matplotlib.use("Agg")
 
 from multiprocessing import Process
-from fdtd.utils import imshow, split
+from fdtd.utils import imshow, batch
 
 hdf5 = h5py.File("result/result.hdf5","r")
 
 processes = [Process(target=imshow, args=(t.get("ez"), "result/twod-test-%.3s.png", os.path.basename(t.name))) for t in hdf5["timeline"].values()]
 
-for sub in split(processes, 60):
-    for p in sub:
-        p.start()
-    for p in sub:
-        p.join()
+batch(processes, 60)
 
 hdf5.close()

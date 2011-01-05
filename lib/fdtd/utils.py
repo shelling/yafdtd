@@ -60,6 +60,14 @@ def split(alist, length):
       head += length
     return result
 
+def batch(processes, size=30):
+    for sub in split(processes, 30):
+        for p in sub:
+            p.start()
+        for p in sub:
+            p.join()
+    return None
+
 filebrowser = {"Darwin": "open", "Linux": "nautilus"}
 def open(dir):
     """
