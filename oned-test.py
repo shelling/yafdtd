@@ -14,11 +14,13 @@ string.source = source.HardSource(source.sin_oft, (5,), string.shape[0]/2)
 
 prepare("result")
 
-hdf5 = h5py.File("result/result.hdf5","w")
-hdf5.attrs["name"] = "oned-test"
+name = "oned-test"
+
+hdf5 = h5py.File("result/%s.hdf5" % name,"w")
+hdf5.attrs["name"] = name
 hdf5.require_group("timeline")
 
-for t in range(0,70):
+for t in range(0,200):
     string.update_efield()\
           .update_abc()\
           .update_source(t)\

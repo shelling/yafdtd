@@ -12,8 +12,10 @@ from scipy.constants import c, epsilon_0
 
 prepare("result")
 
-hdf5 = h5py.File("result/result.hdf5", "w")
-hdf5.attrs["name"] = "twod-test"
+name = "twod-test"
+
+hdf5 = h5py.File("result/%s.hdf5" % name, "w")
+hdf5.attrs["name"] = name 
 hdf5.require_group("timeline")
 
 length = 61
