@@ -12,7 +12,10 @@ def combination(shape):
     index = [item+[k] for item in index for k in range(z)] if z else index
     return index
 
-
+def timeline(timeline, coordinates):
+    for basis in range(len(coordinates)):
+        timeline = timeline[:,coordinates[basis]]
+    return timeline
 
 a = numpy.arange(0,100)
 b = numpy.arange(0,1000)
@@ -24,9 +27,5 @@ c.shape = (10,10,10,10)
 #           t  x  y  z
 
 index = combination(c.shape)
-res = c.copy()
-for i in range(len(index[0])):
-    res = res[:,index[0][i]]
-print res
-
+print timeline(c,index[0])
 
