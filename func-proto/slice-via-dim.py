@@ -4,8 +4,7 @@ import numpy
 
 def combination(shape):
     shape = list(shape)
-    x = shape.pop(0)
-    index = [[i] for i in range(x)]
+    index = [[i] for i in range(shape.pop(0))]
     for basis in shape:
         index = [item+[i] for item in index for i in range(basis)]
     return index
