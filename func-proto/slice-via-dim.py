@@ -26,6 +26,7 @@ b.shape = (10,10,10)
 c.shape = (10,10,10,10)
 #           t  x  y  z
 
-index = combination(c.shape)
-print timeline(c,index[0])
+for array in (a,b,c):
+    index = combination(array.shape)
+    print timeline(array,index[0])
 
