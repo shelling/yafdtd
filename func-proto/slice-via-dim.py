@@ -4,12 +4,10 @@ import numpy
 
 def combination(shape):
     shape = list(shape)
-    while len(shape) < 4:
-        shape.append(None)
-    (t,x,y,z) = shape
+    x = shape.pop(0)
     index = [[i] for i in range(x)]
-    index = [item+[j] for item in index for j in range(y)] if y else index
-    index = [item+[k] for item in index for k in range(z)] if z else index
+    for basis in shape:
+        index = [item+[i] for item in index for i in range(basis)]
     return index
 
 def timeline(timeline, coordinates):
@@ -27,6 +25,6 @@ c.shape = (10,10,10,10)
 #           t  x  y  z
 
 for array in (a,b,c):
-    index = combination(array.shape)
+    index = combination(array.shape[1:])
     print timeline(array,index[0])
 
