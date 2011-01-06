@@ -11,11 +11,9 @@ hdf5 = h5py.File(sys.argv[1], "r")
 outdir = dirname(sys.argv[1])+"/fftcharts"
 prepare(outdir)
 
-timeline = [hdf5["timeline"][str(t)].get("ex") for t in range(len(hdf5["timeline"]))]
+timeline = numpy.array([hdf5["timeline"][str(t)].get("ex") for t in range(len(hdf5["timeline"]))])
 
-twister = numpy.array(timeline).transpose()
-
-for i in range(len(twister)):
-    plot(twister[i], "%s/space-%d.png", (outdir, i))
+for i in range(timeline.shape[1]):
+    plot(timeline[:,i], "%s/space-%d.png", (outdir, i))
 
 open(outdir)
