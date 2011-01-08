@@ -3,11 +3,14 @@
 import Queue
 
 queue = Queue.Queue()
-queue.put(1)
-print queue.get()
-print queue.qsize()
-try:
-  print queue.get_nowait()
-except Queue.Empty:
-  pass
+
+[queue.put(x) for x in range(30)]
+
+print "size: ", queue.qsize()
+
+while True:
+    try:
+        print queue.get_nowait()
+    except Queue.Empty:
+        break
 
