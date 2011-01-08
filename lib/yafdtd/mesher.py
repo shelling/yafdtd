@@ -1,5 +1,5 @@
 from numpy import *
-from fdtd import grid
+from yafdtd import grid
 
 def string(length):
     """

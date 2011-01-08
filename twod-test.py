@@ -4,10 +4,10 @@
 import sys, os, math, h5py, numpy
 sys.path.append("lib")
 
-from fdtd.source import HardSource, TFSF, sin_oft
-from fdtd.algorithm.twodim import freespace, upml
-from fdtd.grid import Plane, String
-from fdtd.utils import *
+from yafdtd.source import HardSource, TFSF, sin_oft
+from yafdtd.algorithm.twodim import freespace, upml
+from yafdtd.grid import Plane, String
+from yafdtd.utils import *
 from scipy.constants import c, epsilon_0
 
 

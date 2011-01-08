@@ -8,7 +8,7 @@ matplotlib.use("Agg")
 import os, pylab, scipy
 
 
-from fdtd.source import *
+from yafdtd.source import *
 
 # program start
 t = numpy.arange(-10, 10, 0.01)        # x axis range

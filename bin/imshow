@@ -6,7 +6,7 @@ matplotlib.use("Agg")
 
 from os.path import dirname, basename
 from multiprocessing import Process
-from fdtd.utils import imshow, batch, order, open, prepare
+from yafdtd.utils import imshow, batch, order, open, prepare
 
 hdf5 = h5py.File(sys.argv[1],"r")
 

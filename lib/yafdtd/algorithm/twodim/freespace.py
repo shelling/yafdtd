@@ -6,7 +6,7 @@ def update_efield( plane ):
     Two dimension efield update equation
 
     Arguments:
-    - `plane`: fdtd.grid.Plane instance 
+    - `plane`: yafdtd.grid.Plane instance 
     """
     (xaxis,yaxis) = plane.shape
 
@@ -27,7 +27,7 @@ def update_hfield( plane ):
     Two dimension hfield update equation
     
     Arguments:
-    - `plane`: fdtd.grid.Plane instance 
+    - `plane`: yafdtd.grid.Plane instance 
     """
     (xaxis,yaxis) = plane.shape
 

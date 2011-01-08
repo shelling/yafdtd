@@ -4,10 +4,10 @@ import os, csv, re, commands
 
 from mpi4py import MPI
 
-from fdtd import source
-from fdtd.algorithm.onedim import *
-from fdtd.grid import String
-from fdtd.utils import *
+from yafdtd import source
+from yafdtd.algorithm.onedim import *
+from yafdtd.grid import String
+from yafdtd.utils import *
 
 comm = MPI.COMM_WORLD
 size = comm.Get_size()

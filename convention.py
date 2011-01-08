@@ -36,7 +36,7 @@ matplotlib.use("Agg")
 import pylab
 import scipy
 from pprint import pprint
-import fdtd
+import yafdtd
 """
     exec code in scope
     pass

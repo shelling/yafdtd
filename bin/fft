@@ -3,7 +3,7 @@
 import sys, os, matplotlib, pylab, h5py, numpy
 sys.path.append("lib")
 
-from fdtd.utils import fft, prepare, open, plot
+from yafdtd.utils import fft, prepare, open, plot
 from os.path import dirname, basename
 
 hdf5 = h5py.File(sys.argv[1], "r")

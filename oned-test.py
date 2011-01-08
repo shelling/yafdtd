@@ -4,10 +4,10 @@
 import sys, os, csv, re, shutil, h5py
 sys.path.append("./lib")
 
-from fdtd import source
-from fdtd.algorithm.onedim import *
-from fdtd.grid import String
-from fdtd.utils import *
+from yafdtd import source
+from yafdtd.algorithm.onedim import *
+from yafdtd.grid import String
+from yafdtd.utils import *
 from scipy.constants import c, epsilon_0
 
 dt = 10**-9

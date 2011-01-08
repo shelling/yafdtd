@@ -2,8 +2,8 @@
 
 import sys, numpy, scipy, matplotlib, pylab
 sys.path.append("./lib")
-from fdtd.source import gaussian_oft
-from fdtd.utils  import fft
+from yafdtd.source import gaussian_oft
+from yafdtd.utils  import fft
 
 DEBUG = 1
 

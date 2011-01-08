@@ -12,7 +12,7 @@ def update_efield( plane, region=None ):
     using region to specify work region, or work on whole region
     
     Arguments:
-    - `plane`: fdtd.grid.Plane instance
+    - `plane`: yafdtd.grid.Plane instance
     - `region`: the region would be updated
     """
 
@@ -34,7 +34,7 @@ def update_hfield( plane, region=None ):
     using region to specify work region, or work on whole region
     
     Arguments:
-    - `plane`: fdtd.grid.Plane instance
+    - `plane`: yafdtd.grid.Plane instance
     - `region`: the region would be updated
     """
 
@@ -66,7 +66,7 @@ def append_pml( plane, thick=8.0 ):
     ihx, ihy
     
     Arguments:
-    - `plane`: fdtd.grid.Plane instance
+    - `plane`: yafdtd.grid.Plane instance
     - `thick`: the number of cells PML would occupy
     """
     if plane.shape[0] < thick * 2 or plane.shape[1] < thick * 2:

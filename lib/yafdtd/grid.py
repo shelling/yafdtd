@@ -1,5 +1,5 @@
 """
-fdtd.grid.py
+yafdtd.grid.py
 
 Implement three kinds of grid object 
 String as 1-D grid
@@ -13,8 +13,8 @@ import pylab
 
 from scipy.constants import epsilon_0, mu_0
 from matplotlib import _pylab_helpers, cm
-from fdtd.algorithm import onedim, twodim, threedim
-from fdtd.source import HardSource, TFSF
+from yafdtd.algorithm import onedim, twodim, threedim
+from yafdtd.source import HardSource, TFSF
 
 
 # {{{

@@ -6,7 +6,7 @@
 #   polynomial                     (not yet)
 
 import math
-import fdtd
+import yafdtd
 import numpy
 
 
@@ -117,7 +117,7 @@ class TFSF(object):
         self.length   = length
         self.function = function
         self.thick    = thick
-        self.auxiliary = fdtd.grid.String(length)
+        self.auxiliary = yafdtd.grid.String(length)
         self.auxiliary.source = HardSource(sin_oft, (0.01,), 3)
         return None
 
