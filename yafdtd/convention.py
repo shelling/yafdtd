@@ -1,8 +1,7 @@
 import sys
 sys.path += ["/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
 
-caller = sys._getframe(1).f_globals["__name__"]
-exec "import %s as target" % caller
+exec "import %s as target" % sys._getframe(1).f_globals["__name__"]
 
 modules = (
     "sys",
@@ -10,35 +9,17 @@ modules = (
     "matplotlib",
     "numpy",
     "scipy",
-    "timeit"
+    "timeit",
+    "h5py",
 )
     
-for module_name in modules:
-    target.__dict__[module_name] = __import__(module_name)
+target.__dict__.update( dict(zip(modules, [__import__(m) for m in modules])) )
 
 target.matplotlib.use("Agg")
 
-target.__dict__["pylab"] = __import__("pylab")                # this should be eval after setting Agg backend
-target.__dict__["pprint"] = __import__("pprint").pprint       # import function
+target.__dict__.update({
+    "pylab"   :   __import__("pylab"),                          # this should be eval after setting Agg backend
+    "pprint"  :   __import__("pprint").pprint,                  # import function
+})
 
-
-
-
-# below is obsolete
-# {{{
-
-def import_convention(scope):
-    code =\
-"""
-import sys, os, matplotlib, numpy
-sys.path += ["/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
-matplotlib.use("Agg")
-import pylab
-import scipy
-from pprint import pprint
-import yafdtd
-"""
-    exec code in scope
-    pass
-
-# }}}
+exec "import yafdtd" in target.__dict__                       # another way
