@@ -9,5 +9,9 @@ setup(
   author          = "shelling",
   author_email    = "navyblueshellingford@gmail.com",
   url             = None,
-  packages        = [],
+  packages        = [
+          'yafdtd',
+          'yafdtd.algorithm',
+          'yafdtd.geometry',
+  ],
 )

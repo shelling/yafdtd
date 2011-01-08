@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, numpy, scipy, matplotlib, pylab
-sys.path.append("./lib")
+sys.path.append(".")
 from yafdtd.source import gaussian_oft
 from yafdtd.utils  import fft
 

@@ -2,7 +2,7 @@
 #-*- mode: python -*-
 
 import sys, matplotlib
-sys.path.append("lib")
+sys.path.append(".")
 matplotlib.use("Agg")
 
 import os, pylab, scipy

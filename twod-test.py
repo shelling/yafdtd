@@ -2,7 +2,6 @@
 #-*- mode: python -*-
 
 import sys, os, math, h5py, numpy
-sys.path.append("lib")
 
 from yafdtd.source import HardSource, TFSF, sin_oft
 from yafdtd.algorithm.twodim import freespace, upml

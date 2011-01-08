@@ -1,5 +1,5 @@
 import sys
-sys.path += ["lib","/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
+sys.path += ["/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
 
 caller = sys._getframe(1).f_globals["__name__"]
 exec "import %s as target" % caller
@@ -31,7 +31,7 @@ def import_convention(scope):
     code =\
 """
 import sys, os, matplotlib, numpy
-sys.path += ["lib","/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
+sys.path += ["/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
 matplotlib.use("Agg")
 import pylab
 import scipy
