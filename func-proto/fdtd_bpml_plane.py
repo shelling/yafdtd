@@ -61,10 +61,10 @@ new_hfield.sigmah = new_efield.sigmah
 
 
 for step in range(1,50):
-    new_efield.y[149:152,149:152] += float(mpmath.sin(step*mpmath.pi/6.125))
+    new_efield.y[149:152,149:152] += float(math.sin(step*math.pi/6.125))
     new_efield = update_efield( new_efield, new_hfield )
-    new_hfield.zx[276,150] += float(mpmath.sin(step*mpmath.pi/6.125))/2
-    new_hfield.zy[276,150] += float(mpmath.sin(step*mpmath.pi/6.126))/2
+    new_hfield.zx[276,150] += float(math.sin(step*math.pi/6.125))/2
+    new_hfield.zy[276,150] += float(math.sin(step*math.pi/6.126))/2
     new_hfield = update_hfield( new_efield, new_hfield )
 
     h = numpy.array(new_hfield.z, dtype="float")

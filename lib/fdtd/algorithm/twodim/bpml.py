@@ -2,7 +2,6 @@
 Berenger's Perfect Matched Layer (BPML) related functions
 """
 
-import mpmath
 import math
 import numpy
 import pylab

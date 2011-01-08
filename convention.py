@@ -8,7 +8,6 @@ modules = (
     "sys",
     "os",
     "matplotlib",
-    "mpmath",
     "numpy",
     "scipy",
     "timeit"
@@ -18,7 +17,6 @@ for module_name in modules:
     target.__dict__[module_name] = __import__(module_name)
 
 target.matplotlib.use("Agg")
-target.mpmath.mp.dps = 100
 
 target.__dict__["pylab"] = __import__("pylab")                # this should be eval after setting Agg backend
 target.__dict__["pprint"] = __import__("pprint").pprint       # import function
@@ -32,9 +30,8 @@ target.__dict__["pprint"] = __import__("pprint").pprint       # import function
 def import_convention(scope):
     code =\
 """
-import sys, os, matplotlib, mpmath, numpy
+import sys, os, matplotlib, numpy
 sys.path += ["lib","/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages"]
-mpmath.mp.dps = 100
 matplotlib.use("Agg")
 import pylab
 import scipy

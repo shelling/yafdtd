@@ -16,9 +16,9 @@ new_hfield.eps[180:,0:] *= 2
 
 
 for step in range(1,600):
-    new_efield.y[150,150] += float(mpmath.sin(step*mpmath.pi/6.125))*2
+    new_efield.y[150,150] += float(math.sin(step*math.pi/6.125))*2
     new_efield = update_efield( new_efield, new_hfield )
-    new_hfield.z[150,150] += float(mpmath.sin(step*mpmath.pi/6.125))*2
+    new_hfield.z[150,150] += float(math.sin(step*math.pi/6.125))*2
     new_hfield = update_hfield( new_efield, new_hfield )
     
 

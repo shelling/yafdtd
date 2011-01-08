@@ -4,7 +4,6 @@ Unaxial Perfect Matched Layer (UPML) related functions
 
 from __future__ import division         # using real division with / operator
 
-import mpmath
 import math
 import numpy
 import pylab
