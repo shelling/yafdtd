@@ -12,6 +12,8 @@ setup(
   packages        = [
           'yafdtd',
           'yafdtd.algorithm',
+          'yafdtd.algorithm.threedim',
+          'yafdtd.algorithm.twodim',
           'yafdtd.geometry',
   ],
 )
