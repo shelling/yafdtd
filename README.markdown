@@ -3,6 +3,17 @@ Yet Another Finite-Difference Time-Domain Framework
 
 ## Installation
 
+To install from PyPI, please run
+
+    $ sudo pip install yafdtd
+
+Or checkout from repository and run
+
+    $ sudo python setup.py install
+
+## Repository
+
+<http://github.com/shelling/yafdtd>
 
 ## License
 This software is released under GPL v2
