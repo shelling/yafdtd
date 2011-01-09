@@ -7,7 +7,7 @@ def combination(shape):
     index = [[i] for i in range(shape.pop(0))]
     for basis in shape:
         index = [item+[i] for item in index for i in range(basis)]
-    return index
+    return [tuple(item) for item in index]
 
 def timeline(timeline, coordinates):
     for basis in range(len(coordinates)):
@@ -26,4 +26,8 @@ c.shape = (10,10,10,10)
 for array in (a,b,c):
     index = combination(array.shape[1:])
     print timeline(array,index[0])
+
+for array in (a,b,c):
+    index = combination(array.shape[1:])
+    print array.transpose()[index[0]]
 
