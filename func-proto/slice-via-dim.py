@@ -25,9 +25,10 @@ c.shape = (10,10,10,10)
 
 for array in (a,b,c):
     index = combination(array.shape[1:])
-    print timeline(array,index[0])
-
-for array in (a,b,c):
-    index = combination(array.shape[1:])
-    print array.transpose()[index[0]]
-
+    order = tuple(range(1,len(array.shape)) + [0])
+    print order
+    for i in index:
+        if timeline(array,i).tolist() == array.transpose(order)[i].tolist():
+            print "True"
+        else:
+            print "False"
