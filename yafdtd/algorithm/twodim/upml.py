@@ -9,6 +9,13 @@ import numpy
 import pylab
 
 
+def update_dfield(self, region=None ):
+    """
+    
+    Arguments:
+    - `region`:
+    """
+    return None
 
 def update_efield( plane, region=None ):
     """
@@ -32,13 +39,6 @@ def update_efield( plane, region=None ):
                 plane.ezfield[i,j] = plane.ga[i,j] * plane.dzfield[i,j]
     return None
 
-def update_dfield(self, region=None ):
-    """
-    
-    Arguments:
-    - `region`:
-    """
-    return None
 
 
 def update_hfield( plane, region=None ):

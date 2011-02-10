@@ -1,6 +1,11 @@
 import math
 
 
+def update_dfield(string):
+    for x in range(1,string.shape[0]):
+        string.dfield[x] = string.dfield[x] + 0.5 * ( string.hfield[x-1] - string.hfield[x] )
+    return string
+
 def update_efield(string):
     """
     update efield
@@ -9,12 +14,14 @@ def update_efield(string):
     - `string`: yafdtd.String instance containing fields and material data
     """
     for x in range(1, string.shape[0]):
-        string.efield[x] = string.efield[x] + 0.5 * ( string.hfield[x-1] - string.hfield[x] )
-    return None
+        # string.efield[x] = string.efield[x] + 0.5 * ( string.hfield[x-1] - string.hfield[x] )
+        string.efield[x] = string.dfield[x]
+    return string
 
-
-
-
+def update_bfield(string):
+    for x in range(0, string.shape[0]-1):
+        string.bfield[x] = string.bfield[x] + 0.5 * ( string.efield[x] - string.efield[x+1] )
+    return string
 
 def update_hfield(string):
     """
@@ -24,8 +31,9 @@ def update_hfield(string):
     - `string`: yafdtd.String instance containing fields and material data
     """
     for x in range(0, string.shape[0]-1):
-        string.hfield[x] = string.hfield[x] + 0.5 * ( string.efield[x] - string.efield[x+1] )
-    return None
+        string.hfield[x] = string.bfield[x]
+        # string.hfield[x] = string.hfield[x] + 0.5 * ( string.efield[x] - string.efield[x+1] )
+    return string
 
 
 

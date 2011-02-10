@@ -23,6 +23,11 @@ class String(object):
     1-D grid object
     """
     
+    update_dfield = onedim.update_dfield
+    update_efield = onedim.update_efield
+    update_bfield = onedim.update_bfield
+    update_hfield = onedim.update_hfield
+    
     def __init__(self, length):
         """
         giving length as quantity of cells to create a FDTD String
@@ -30,26 +35,15 @@ class String(object):
         Arguments:
         - `length`: quantity of cells
         """
+        self.dfield = numpy.zeros(length)
         self.efield = numpy.zeros(length)
+        self.bfield = numpy.zeros(length)
         self.hfield = numpy.zeros(length)
         self.eps    = numpy.zeros(length)
         self.sigmae = numpy.zeros(length)
         self.shape  = self.efield.shape
         pass
 
-    def update_efield(self):
-        """
-        update efield of the String instance
-        """
-        onedim.update_efield(self)
-        return self
-
-    def update_hfield(self):
-        """
-        update hfield of the String instance
-        """
-        onedim.update_hfield(self)
-        return self
 
     def update_abc(self):
         """

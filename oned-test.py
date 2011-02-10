@@ -27,14 +27,16 @@ hdf5.attrs["dx"]    = dx
 hdf5.require_group("timeline")
 
 for t in range(0,500):
-    string.update_efield()\
+    string.update_dfield()\
+          .update_efield()\
           .update_abc()\
           .update_source(t*dt)\
+          .update_bfield()\
           .update_hfield()
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ex"] = string.efield
     hdf5["timeline"][str(t)]["hy"] = string.hfield
-    print t
+    print(t)
 
 hdf5.close()
 
