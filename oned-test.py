@@ -4,7 +4,6 @@
 import sys, os, csv, re, shutil, h5py
 
 from yafdtd import source
-from yafdtd.algorithm.onedim import *
 from yafdtd.grid import String
 from yafdtd.utils import *
 from scipy.constants import c, epsilon_0

@@ -27,6 +27,8 @@ class String(object):
     update_efield = onedim.update_efield
     update_bfield = onedim.update_bfield
     update_hfield = onedim.update_hfield
+
+    update_abc = onedim.update_abc
     
     def __init__(self, length):
         """
@@ -43,14 +45,6 @@ class String(object):
         self.sigmae = numpy.zeros(length)
         self.shape  = self.efield.shape
         pass
-
-
-    def update_abc(self):
-        """
-        update abc of the String instance
-        """
-        onedim.update_abc(self)
-        return self
 
     def update_source(self, t):
         """
