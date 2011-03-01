@@ -48,13 +48,10 @@ class String(object):
         return None
 
     def curl_e(self):
-        res = numpy.zeros(self.shape[0])
-        for x in range(self.shape[0]-1):
-            res[x] = self.efield[x] - self.efield[x+1]
-        return res
+        return numpy.array([self.efield[x] - self.efield[x+1] for x in range(self.shape[0]-1)] + [0])
 
     def curl_h(self):
-        return numpy.array([self.hfield[x-1] - self.hfield[x] for x in range(self.shape[0])])
+        return numpy.array([0] + [self.hfield[x-1] - self.hfield[x] for x in range(1, self.shape[0])])
 
     def update_source(self, t):
         """
