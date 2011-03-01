@@ -62,7 +62,7 @@ class String(object):
         return self
 
 
-    def plot(self, pattern, id, intensity=[-1,1]):
+    def plot(self, pattern="/tmp/%.3d.png", id, intensity=[-1,1]):
         """
         plot the String instance to a file
         
