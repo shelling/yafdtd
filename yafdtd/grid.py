@@ -269,19 +269,3 @@ class Cube(object):
         
 
         
-# {{{        
-class Point(object):
-    """ Grid point object used in grid array """
-    
-    def __init__(self, properties = {}):
-        """
-        pass a properties hash to initialize it
-        Arguments:
-        - `properties`: hash
-        """
-        self._properties = properties
-        self.eps   = properties["eps"]
-        self.mu    = properties["mu"]
-        self.sigma = properties["sigma"]
-        
-# }}}
