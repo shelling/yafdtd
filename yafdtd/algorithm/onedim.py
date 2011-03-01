@@ -12,8 +12,9 @@ def update_efield(string):
     Arguments:
     - `string`: yafdtd.String instance containing fields and material data
     """
-    for x in range(1, string.shape[0]):
-        string.efield[x] = string.dfield[x]
+    # for x in range(1, string.shape[0]):
+    #     string.efield[x] = string.dfield[x]
+    string.efield = string.dfield
     return string
 
 def update_bfield(string):
@@ -27,8 +28,9 @@ def update_hfield(string):
     Arguments:
     - `string`: yafdtd.String instance containing fields and material data
     """
-    for x in range(0, string.shape[0]-1):
-        string.hfield[x] = string.bfield[x]
+    # for x in range(0, string.shape[0]-1):
+    #     string.hfield[x] = string.bfield[x]
+    string.hfield = string.bfield
     return string
 
 
