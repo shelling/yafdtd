@@ -44,7 +44,7 @@ class String(object):
         self.eps    = numpy.zeros(length)
         self.sigmae = numpy.zeros(length)
         self.shape  = self.efield.shape
-        pass
+        return None
 
     def update_source(self, t):
         """
@@ -103,14 +103,26 @@ class Plane(object):
         self.gb = numpy.zeros(shape)
 
         if transverse == "TE":
-            self.hzfield = numpy.zeros(shape)
+            self.dxfield = numpy.zeros(shape)
+            self.dyfield = numpy.zeros(shape)
+            
             self.exfield = numpy.zeros(shape)
             self.eyfield = numpy.zeros(shape)
+            
+            self.bzfield = numpy.zeros(shape)
+            
+            self.hzfield = numpy.zeros(shape)
         elif transverse == "TM":
-            self.ezfield = numpy.zeros(shape)
             self.dzfield = numpy.zeros(shape)
+
+            self.ezfield = numpy.zeros(shape)
+
+            self.bxfield = numpy.zeros(shape)
+            self.byfield = numpy.zeros(shape)
+            
             self.hxfield = numpy.zeros(shape)
             self.hyfield = numpy.zeros(shape)
+            
             self.ihx     = numpy.zeros(shape)
             self.ihy     = numpy.zeros(shape)
         else:
@@ -232,13 +244,31 @@ class Plane(object):
 class Cube(object):
     """ Three dimension grid object """
     
-    def __init__(self, abuffer):
+    def __init__(self, shape):
         """
         
         Arguments:
         - `abuffer`:
         """
         self._abuffer = abuffer
+        
+        self.dxfield = numpy.zeros(shape)
+        self.dyfield = numpy.zeros(shape)
+        self.dzfield = numpy.zeros(shape)
+        
+        self.exfield = numpy.zeros(shape)
+        self.eyfield = numpy.zeros(shape)
+        self.ezfield = numpy.zeros(shape)
+
+        self.bxfield = numpy.zeros(shape)
+        self.byfield = numpy.zeros(shape)
+        self.bzfield = numpy.zeros(shape)
+        
+        self.hxfield = numpy.zeros(shape)
+        self.hyfield = numpy.zeros(shape)
+        self.hzfield = numpy.zeros(shape)
+        
+        return None
 
 # }}}        
         
@@ -259,24 +289,4 @@ class Point(object):
         self.mu    = properties["mu"]
         self.sigma = properties["sigma"]
         
-# }}}
-
-# {{{
-
-class Cylinder(object):
-    """
-    3-D grid object of coordinate R Phi Z
-    """
-    
-    def __init__(self, shape):
-        """
-        giving shape contain R Phi Z to create Cylinder
-        
-        Arguments:
-        - `shape`:
-        """
-        self._shape = shape
-        pass
-
-
 # }}}
