@@ -15,6 +15,7 @@ from scipy.constants import epsilon_0, mu_0
 from matplotlib import _pylab_helpers, cm
 from yafdtd.algorithm import onedim, twodim, threedim
 from yafdtd.source import HardSource, TFSF
+from yafdtd import utils
 
 
 # {{{
@@ -61,20 +62,14 @@ class String(object):
         return self
 
 
-    def plot(self, pattern, id, range=[-1,1]):
+    def plot(self, pattern, id, intensity=[-1,1]):
         """
         plot the String instance to a file
         
         Arguments:
         - `pattern`: filename pattern
         """
-        fig = pylab.figure()
-        ax = fig.gca()
-        ax.plot(self.efield)
-        ax.set_ylim(range)
-        ax.set_xlim(0,self.shape[0]-1)
-        fig.savefig(pattern % id)
-        _pylab_helpers.Gcf.destroy_fig(fig)
+        utils.plot(self.efield, pattern, id, intensity)
         return None
 
 # }}}

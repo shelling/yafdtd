@@ -25,13 +25,15 @@ hdf5.attrs["dt"]    = dt
 hdf5.attrs["dx"]    = dx
 hdf5.require_group("timeline")
 
-for t in range(0,500):
-    string.update_dfield()\
-          .update_efield()\
-          .update_abc()\
-          .update_source(t*dt)\
-          .update_bfield()\
-          .update_hfield()
+for t in range(0,100):
+    string.update_dfield()
+    string.update_efield()
+    string.update_abc()
+    string.update_source(t*dt)
+    string.update_bfield()
+    string.update_hfield()
+    # string.plot("/tmp/%.3d.png",t)
+    
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ex"] = string.efield
     hdf5["timeline"][str(t)]["hy"] = string.hfield
