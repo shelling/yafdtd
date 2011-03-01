@@ -2,8 +2,7 @@ import math
 
 
 def update_dfield(string):
-    for x in range(1,string.shape[0]):
-        string.dfield[x] = string.dfield[x] + 0.5 * ( string.hfield[x-1] - string.hfield[x] )
+    string.dfield += 0.5 * string.curl_h()
     return string
 
 def update_efield(string):
@@ -18,8 +17,7 @@ def update_efield(string):
     return string
 
 def update_bfield(string):
-    for x in range(0, string.shape[0]-1):
-        string.bfield[x] = string.bfield[x] + 0.5 * ( string.efield[x] - string.efield[x+1] )
+    string.bfield += 0.5 * string.curl_e()
     return string
 
 def update_hfield(string):

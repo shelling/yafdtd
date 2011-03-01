@@ -47,6 +47,15 @@ class String(object):
         self.shape  = self.efield.shape
         return None
 
+    def curl_e(self):
+        res = numpy.zeros(self.shape[0])
+        for x in range(self.shape[0]-1):
+            res[x] = self.efield[x] - self.efield[x+1]
+        return res
+
+    def curl_h(self):
+        return numpy.array([self.hfield[x-1] - self.hfield[x] for x in range(self.shape[0])])
+
     def update_source(self, t):
         """
         write the new value of source into problem region
@@ -62,7 +71,7 @@ class String(object):
         return self
 
 
-    def plot(self, pattern="/tmp/%.3d.png", id, intensity=[-1,1]):
+    def plot(self, pattern, id, intensity=[-1,1]):
         """
         plot the String instance to a file
         
