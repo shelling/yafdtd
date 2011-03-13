@@ -82,7 +82,7 @@ def open(dir):
     open directory in gui file browser is possible
     """
     app = filebrowser[os.uname()[0]]
-    os.system(app+" "+dir) if app else None
+    os.system(app+" "+dir+" &") if app else None
     return None
 
 def prepare(outdir):
