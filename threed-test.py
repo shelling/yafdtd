@@ -21,10 +21,10 @@ length = 61
 
 cube = Cube((length,length,length))
 
-for t in range(100):
+for t in range(300):
     cube.update_dfield()
     cube.update_efield()
-    cube.ezfield[30,30,30] = 2 * sin_oft(0.005*t)
+    cube.ezfield[30,:,:] = sin_oft(0.005*t)
     cube.update_bfield()
     cube.update_hfield()
     
