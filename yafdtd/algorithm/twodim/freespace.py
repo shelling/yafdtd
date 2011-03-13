@@ -1,44 +1,35 @@
 import math
 
 
-def update_efield( plane ):
+def update_dfield(plane):
     """
-    Two dimension efield update equation
-
-    Arguments:
-    - `plane`: yafdtd.grid.Plane instance 
     """
-    (xaxis,yaxis) = plane.shape
+    plane.dxfield += 0.5 * plane.curl_hx()
+    plane.dyfield += 0.5 * plane.curl_hy()
+    plane.dzfield += 0.5 * plane.curl_hz()
+    return plane
 
-    if plane.transverse == "TE":
-        for i in range(1,xaxis):
-            for j in range(1,yaxis):
-                plane.exfield[i,j] = plane.exfield[i,j] + 0.5 * ( plane.hzfield[i,j+1] - plane.hzfield[i,j-1] )
-                plane.eyfield[i,j] = plane.eyfield[i,j] - 0.5 * ( plane.hzfield[i+1,j] - plane.hzfield[i-1,j] )
-    elif plane.transverse == "TM":
-        for i in range(0,xaxis):
-            for j in range(0,yaxis):
-                plane.ezfield[i,j] = plane.ezfield[i,j] + 0.5 * ( plane.hyfield[i,j] - plane.hyfield[i-1,j] - plane.hxfield[i,j] + plane.hxfield[i,j-1] )
-    return None
+def update_efield(plane):
+    """
+    """
+    plane.exfield = plane.dxfield
+    plane.eyfield = plane.dyfield
+    plane.ezfield = plane.dzfield
+    return plane
 
+def update_bfield(plane):
+    """
+    """
+    plane.bxfield -= 0.5 * plane.curl_ex()
+    plane.byfield -= 0.5 * plane.curl_ey()
+    plane.bzfield -= 0.5 * plane.curl_ez()
+    return plane
 
 def update_hfield( plane ):
     """
-    Two dimension hfield update equation
-    
-    Arguments:
-    - `plane`: yafdtd.grid.Plane instance 
     """
-    (xaxis,yaxis) = plane.shape
-
-    if plane.transverse == "TE":
-        for i in range(0,xaxis-1):
-            for j in range(0,yaxis-1):
-                plane.hzfield[i,j] = plane.hzfield[i,j] + 0.5 * ( plane.exfield[i,j+1] - plane.exfield[i,j-1] ) - 0.5 * ( plane.eyfield[i+1,j] - plane.eyfield[i-1,j] )
-    elif plane.transverse == "TM":
-        for i in range(0,xaxis-1):
-            for j in range(0,yaxis-1):
-                plane.hxfield[i,j] = plane.hxfield[i,j] + 0.5 * ( plane.ezfield[i,j] - plane.ezfield[i,j+1] )
-                plane.hyfield[i,j] = plane.hyfield[i,j] + 0.5 * ( plane.ezfield[i+1,j] - plane.ezfield[i,j] )
-    return None
+    plane.hxfield = plane.bxfield
+    plane.hyfield = plane.byfield
+    plane.hzfield = plane.bzfield
+    return plane
 

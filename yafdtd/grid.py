@@ -82,15 +82,19 @@ class String(object):
 
 
 
-# {{{
+
 class Plane(object):
     """
     Two dimension grid object
     Only generial parameters are defined in constructor.
     The rest, related to BPML or UPML, are appended in helper functions
     """
+    update_dfield = twodim.freespace.update_dfield
+    update_efield = twodim.freespace.update_efield
+    update_bfield = twodim.freespace.update_bfield
+    update_hfield = twodim.freespace.update_hfield
 
-    def __init__(self, shape, transverse ):
+    def __init__(self, shape):
         """
         Arguments:
         - `shape`: specify plance shape
@@ -98,152 +102,90 @@ class Plane(object):
         """
 
         self.shape = shape
-        self.transverse = transverse
         
-        self.ga = numpy.ones(shape)
-        self.gb = numpy.zeros(shape)
+        self.dxfield = numpy.zeros(shape)
+        self.dyfield = numpy.zeros(shape)
+        self.dzfield = numpy.zeros(shape)
 
-        if transverse == "TE":
-            self.dxfield = numpy.zeros(shape)
-            self.dyfield = numpy.zeros(shape)
-            
-            self.exfield = numpy.zeros(shape)
-            self.eyfield = numpy.zeros(shape)
-            
-            self.bzfield = numpy.zeros(shape)
-            
-            self.hzfield = numpy.zeros(shape)
-        elif transverse == "TM":
-            self.dzfield = numpy.zeros(shape)
+        self.exfield = numpy.zeros(shape)
+        self.eyfield = numpy.zeros(shape)
+        self.ezfield = numpy.zeros(shape)
 
-            self.ezfield = numpy.zeros(shape)
+        self.bxfield = numpy.zeros(shape)
+        self.byfield = numpy.zeros(shape)
+        self.bzfield = numpy.zeros(shape)
 
-            self.bxfield = numpy.zeros(shape)
-            self.byfield = numpy.zeros(shape)
+        self.hxfield = numpy.zeros(shape)
+        self.hyfield = numpy.zeros(shape)
+        self.hzfield = numpy.zeros(shape)
             
-            self.hxfield = numpy.zeros(shape)
-            self.hyfield = numpy.zeros(shape)
-            
-            self.ihx     = numpy.zeros(shape)
-            self.ihy     = numpy.zeros(shape)
-        else:
-            # raise error here
-            pass
-
         return None
 
-    def append(self, object):
+    def curl_ex(self):
+        res = numpy.zeros(self.shape)
+        (x,y) = self.shape
+        for i in range(x):
+            for j in range(y-1):
+                res[i,j] = self.ezfield[i,j+1] - self.ezfield[i,j]
+        return res
+
+    def curl_ey(self):
+        res = numpy.zeros(self.shape)
+        (x,y) = self.shape
+        for i in range(x-1):
+            for j in range(y):
+                res[i,j] =-self.ezfield[i+1,j] + self.ezfield[i,j]
+        return res
+
+    def curl_ez(self):
+        res = numpy.zeros(self.shape)
+        (x,y) = self.shape
+        for i in range(x-1):
+            for j in range(y-1):
+                res[i,j] = self.eyfield[i+1,j] - self.eyfield[i,j] - self.exfield[i,j+1] + self.exfield[i,j]
+        return res
+    
+    def curl_hx(self):
         """
-        append extra object onto the Plane instance.
-        The object can be a instance of PML, Geometry, Source, etc.
-        
-        Arguments:
-        - `object`:
+        for TEz case
         """
-        object.stick(self)
-        return self
+        res = numpy.zeros(self.shape)
+        (x,y) = self.shape
+        for i in range(x):
+            for j in range(1,y):
+                res[i,j] = self.hzfield[i,j] - self.hzfield[i,j-1]
+        return res
+
+    def curl_hy(self):
+        """
+        for TEz case
+        """
+        res = numpy.zeros(self.shape)
+        (x,y) = self.shape
+        for i in range(1,x):
+            for j in range(y):
+                res[i,j] =-self.hzfield[i,j] + self.hzfield[i-1,j]
+        return res
+
+    def curl_hz(self):
+        """
+        for TMz case
+        """
+        res = numpy.zeros(self.shape)
+        (x,y) = self.shape
+        for i in range(1,x):
+            for j in range(1,y):
+                res[i,j] = self.hyfield[i,j] - self.hyfield[i-1,j] - self.hxfield[i,j] + self.hxfield[i,j-1]
+        return res
 
 
-    def update_efield(self):
-        """
-        update efield of the Plane instance
-        """
-        if type(self.pml) == twodim.upml.UPML:
-            twodim.upml.update_efield(self)
-        elif type(self.pml) == twodim.bpml.BPML:
-            # not yet implement
-            pass
-        return self
-
-    def update_hfield(self):
-        """
-        update hfield of the Plane instance
-        """
-        if type(self.pml) == twodim.upml.UPML:
-            twodim.upml.update_hfield(self)
-        elif type(self.pml) == twodim.bpml.BPML:
-            # not yet implement
-            pass
-        return self
-
-
-
-    def update_source(self, t):
-        """
-        write the new value of souce into auxiliary
-        
-        Arguments:
-        - `t`:
-        """
-        if type(self.source) == HardSource:
-            self.ezfield[self.source.position] = self.source.function(t, *(self.source.options))
-        elif type(self.source) == TFSF:
-            length    = self.source.length
-            edge      = self.source.thick
-            auxiliary = self.source.auxiliary
-            auxiliary.update_efield().update_abc().update_source(t)
-            for i in range(edge,length-edge):
-                self.dzfield[i,edge]        = self.dzfield[i,edge]        + 0.5 * auxiliary.hfield[edge-1]
-                self.dzfield[i,length-edge] = self.dzfield[i,length-edge] - 0.5 * auxiliary.hfield[length-edge]
-            auxiliary.update_hfield()
-            for i in range(edge,length-edge):
-                self.hxfield[i,edge-1]      = self.hxfield[i,edge-1]      + 0.5 * auxiliary.efield[edge]
-                self.hxfield[i,length-edge] = self.hxfield[i,length-edge] - 0.5 * auxiliary.efield[length-edge]
-            for j in range(edge,length-edge):
-                self.hyfield[edge-1,j]      = self.hyfield[edge-1,j]      - 0.5 * auxiliary.efield[j]
-                self.hyfield[length-edge,j] = self.hyfield[length-edge,j] + 0.5 * auxiliary.efield[j]
-        return self
-
-    def plot(self, pattern, id, range=[-1,1]):
-        """
-        plot the Plane instance to a file of 2-D view
-        
-        Arguments:
-        - `pattern`:
-        - `id`:
-        - `range`:
-        """
-        fig = pylab.figure()
-        if self.transverse == "TM":
-            field = self.ezfield
-        elif self.transverse == "TE":
-            field = self.hzfield
-        im = fig.gca().imshow( field, norm=matplotlib.colors.Normalize( *(range + [True]) ) )
-        fig.colorbar(im)
-        fig.savefig(pattern % id)
-        _pylab_helpers.Gcf.destroy_fig(fig)
-        return self
-    def plot3d(self, pattern, id, range=[-1,1]):
-        """
-        plot the Plane instance to a file of 3-D view
-        
-        Arguments:
-        - `pattern`:
-        - `id`:
-        - `range`:
-        """
-        if self.transverse == "TM":
-            field = self.ezfield
-        elif self.transverse == "TE":
-            field = self.hzfield
-
-        x = numpy.arange(0, self.shape[0])
-        y = numpy.arange(0, self.shape[1])
-        x, y = numpy.meshgrid(x, y)
-        fig = pylab.figure()
-        ax = fig.gca(projection="3d")
-        ax.plot_surface(x, y, field, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False, norm=matplotlib.colors.Normalize(-1,1,True))
-        ax.set_zlim3d(range)
-        fig.savefig(pattern % id)
-        _pylab_helpers.Gcf.destroy_fig(fig)
-        return self
-
-
-# }}}
-
-# {{{
 class Cube(object):
     """ Three dimension grid object """
+
+    update_dfield = threedim.freespace.update_dfield
+    update_efield = threedim.freespace.update_efield
+    update_bfield = threedim.freespace.update_bfield
+    update_hfield = threedim.freespace.update_hfield
     
     def __init__(self, shape):
         """
@@ -251,7 +193,7 @@ class Cube(object):
         Arguments:
         - `abuffer`:
         """
-        self._abuffer = abuffer
+        self.shape = shape
         
         self.dxfield = numpy.zeros(shape)
         self.dyfield = numpy.zeros(shape)
@@ -271,7 +213,58 @@ class Cube(object):
         
         return None
 
-# }}}        
-        
+    def curl_ex(self):
+        res = numpy.zeros(self.shape)
+        (x,y,z) = self.shape
+        for i in range(x):
+            for j in range(y-1):
+                for k in range(z-1):
+                    res[i,j,k] = self.ezfield[i,j+1,k] - self.ezfield[i,j,k] - self.eyfield[i,j,k+1] + self.eyfield[i,j,k]
+        return res
+
+    def curl_ey(self):
+        res = numpy.zeros(self.shape)
+        (x,y,z) = self.shape
+        for i in range(x-1):
+            for j in range(y):
+                for k in range(z-1):
+                    res[i,j,k] = self.exfield[i,j,k+1] - self.exfield[i,j,k] - self.ezfield[i+1,j,k] + self.ezfield[i,j,k]
+        return res
+
+    def curl_ez(self):
+        res = numpy.zeros(self.shape)
+        (x,y,z) = self.shape
+        for i in range(x-1):
+            for j in range(y-1):
+                for k in range(z):
+                    res[i,j,k] = self.eyfield[i+1,j,k] - self.eyfield[i,j,k] - self.exfield[i,j+1,k] + self.exfield[i,j,k]
+        return res
+
+    def curl_hx(self):
+        res = numpy.zeros(self.shape)
+        (x,y,z) = self.shape
+        for i in range(x):
+            for j in range(y):
+                for k in range(z):
+                    res[i,j,k] = self.hzfield[i,j,k] - self.hzfield[i,j-1,k] - self.hyfield[i,j,k] + self.hyfield[i,j,k-1]
+        return res
+
+    def curl_hy(self):
+        res = numpy.zeros(self.shape)
+        (x,y,z) = self.shape
+        for i in range(x):
+            for j in range(y):
+                for k in range(z):
+                    res[i,j,k] = self.hxfield[i,j,k] - self.hxfield[i,j,k-1] - self.hzfield[i,j,k] + self.hzfield[i-1,j,k]
+        return res
+
+    def curl_hz(self):
+        res = numpy.zeros(self.shape)
+        (x,y,z) = self.shape
+        for i in range(x):
+            for j in range(y):
+                for k in range(z):
+                    res[i,j,k] = self.hyfield[i,j,k] - self.hyfield[i-1,j,k] - self.hxfield[i,j,k] + self.hxfield[i,j-1,k]
+        return res
 
         
