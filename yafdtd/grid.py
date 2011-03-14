@@ -18,7 +18,6 @@ from yafdtd.source import HardSource, TFSF
 from yafdtd import utils
 
 
-# {{{
 class String(object):
     """
     1-D grid object
@@ -60,9 +59,9 @@ class String(object):
         Arguments:
         - `t`: current timestep
         """
-        if type(self.source) == HardSource:
+        if isinstance(self.source, HardSource):
             self.efield[self.source.position] = self.source.function(t, *(self.source.options))
-        elif type(self.source) == TFSF:
+        elif isinstance(self.source, TFSF):
             # not yet implement
             pass
         return self
@@ -77,9 +76,6 @@ class String(object):
         """
         utils.plot(self.efield, pattern, id, intensity)
         return None
-
-# }}}
-
 
 
 
