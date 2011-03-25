@@ -30,19 +30,23 @@ plane = Plane((length,length))
 
 
 for t in range(0,100):
-    plane.hxedgey = plane.hxfield[:,30] # pbc y
-    plane.hyedgex = plane.hyfield[30,:] # pbc x
+    plane.hxedgey = plane.hxfield[:,60] # pbc y
+    plane.hyedgex = plane.hyfield[60,:] # pbc x
+    plane.hzedgey = plane.hzfield[:,60] # pbc y
+    plane.hzedgex = plane.hzfield[60,:] # pbc x
     
     plane.update_dfield()
     plane.update_efield()
     plane.ezfield[0,0] = sin_oft(0.005*t)
 
+    plane.exedgey = plane.exfield[:,0] # pbc y
+    plane.eyedgex = plane.eyfield[0,:] # pbc x
     plane.ezedgey = plane.ezfield[:,0] # pbc y
     plane.ezedgex = plane.ezfield[0,:] # pbc x
     
     plane.update_bfield()
     plane.update_hfield()
-    # plane.hzfield[1,15] = sin_oft(0.005*t)
+    plane.hzfield[0,0] = sin_oft(0.005*t)
 
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ez"] = plane.ezfield

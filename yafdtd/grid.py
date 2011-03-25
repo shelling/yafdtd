@@ -149,10 +149,10 @@ class Plane(object):
             for j in range(y-1):
                 res[i,j] = self.eyfield[i+1,j] - self.eyfield[i,j] - self.exfield[i,j+1] + self.exfield[i,j]
         for i in range(x-1):
-            res[i,y-1] = self.eyfield[i+1,y-1] - self.eyfield[i,y-1] - self.exfield[i,0] + self.exfield[i,y-1]
+            res[i,y-1] = self.eyfield[i+1,y-1] - self.eyfield[i,y-1] - self.exedgey[i] + self.exfield[i,y-1]
         for j in range(y-1):
-            res[x-1,j] = self.eyfield[0,j] - self.eyfield[x-1,j] - self.exfield[x-1,j+1] + self.exfield[x-1,j]
-        res[x-1,y-1] = self.eyfield[0,y-1] - self.eyfield[x-1,y-1] - self.exfield[x-1,0] + self.exfield[x-1,y-1]
+            res[x-1,j] = self.eyedgex[j] - self.eyfield[x-1,j] - self.exfield[x-1,j+1] + self.exfield[x-1,j]
+        res[x-1,y-1] = self.eyedgex[y-1] - self.eyfield[x-1,y-1] - self.exedgey[x-1] + self.exfield[x-1,y-1]
         return res
     
     def curl_hx(self):
@@ -165,7 +165,7 @@ class Plane(object):
             for j in range(1,y):
                 res[i,j] = self.hzfield[i,j] - self.hzfield[i,j-1]
         for i in range(x):
-            res[i,0] = self.hzfield[i,0] - self.hzfield[i,y-1]
+            res[i,0] = self.hzfield[i,0] - self.hzedgey[i]
         return res
 
     def curl_hy(self):
@@ -178,7 +178,7 @@ class Plane(object):
             for j in range(y):
                 res[i,j] =-self.hzfield[i,j] + self.hzfield[i-1,j]
         for j in range(y):
-            res[0,j] =-self.hzfield[0,j] + self.hzfield[x-1,j]
+            res[0,j] =-self.hzfield[0,j] + self.hzedgex[j]
         return res
 
     def curl_hz(self):
