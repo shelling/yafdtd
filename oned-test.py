@@ -40,5 +40,3 @@ for t in range(0,300):
     print(t)
 
 hdf5.close()
-
-open(outdir)
