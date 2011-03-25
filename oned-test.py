@@ -32,7 +32,7 @@ for t in range(0,300):
     string.update_source(t*dt)
     string.update_bfield()
     string.update_hfield()
-    string.plot("/tmp/%.3d.png",t)
+    # string.plot("/tmp/%.3d.png",t)
     
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ex"] = string.efield
