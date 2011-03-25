@@ -32,7 +32,7 @@ plane = Plane((length,length))
 for t in range(0,100):
     plane.update_dfield()
     plane.update_efield()
-    plane.ezfield[16,16] = sin_oft(0.005*t)
+    plane.ezfield[1,15] = sin_oft(0.005*t)
     plane.update_bfield()
     plane.update_hfield()
 
@@ -41,5 +41,3 @@ for t in range(0,100):
     print t
 
 hdf5.close()
-
-open(outdir)

@@ -114,7 +114,7 @@ class Plane(object):
         self.hxfield = numpy.zeros(shape)
         self.hyfield = numpy.zeros(shape)
         self.hzfield = numpy.zeros(shape)
-            
+
         return None
 
     def curl_ex(self):
@@ -123,6 +123,8 @@ class Plane(object):
         for i in range(x):
             for j in range(y-1):
                 res[i,j] = self.ezfield[i,j+1] - self.ezfield[i,j]
+        for i in range(x):
+            res[i,y-1] = self.ezfield[i,0] - self.ezfield[i,y-1]
         return res
 
     def curl_ey(self):
@@ -131,6 +133,8 @@ class Plane(object):
         for i in range(x-1):
             for j in range(y):
                 res[i,j] =-self.ezfield[i+1,j] + self.ezfield[i,j]
+        for j in range(y):
+            res[x-1,j] =-self.ezfield[0,j] + self.ezfield[x-1,j]
         return res
 
     def curl_ez(self):
@@ -172,6 +176,11 @@ class Plane(object):
         for i in range(1,x):
             for j in range(1,y):
                 res[i,j] = self.hyfield[i,j] - self.hyfield[i-1,j] - self.hxfield[i,j] + self.hxfield[i,j-1]
+        for i in range(1,x):
+            res[i,0] = self.hyfield[i,0] - self.hyfield[i-1,0] - self.hxfield[i,0] + self.hxfield[i,y-1]
+        for j in range(1,y):
+            res[0,j] = self.hyfield[0,j] - self.hyfield[x-1,j] - self.hxfield[0,j] + self.hxfield[0,j-1]
+        res[0,0] = self.hyfield[0,0] - self.hyfield[x-1,0] - self.hxfield[0,0] + self.hxfield[0,y-1]
         return res
 
 
