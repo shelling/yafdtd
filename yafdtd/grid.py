@@ -120,6 +120,11 @@ class Plane(object):
         self.ezedgey = numpy.zeros(shape[0])
         self.ezedgex = numpy.zeros(shape[1])
 
+        self.exedgey = numpy.zeros(shape[0])
+        self.eyedgex = numpy.zeros(shape[1])
+        self.hzedgey = numpy.zeros(shape[0])
+        self.hzedgex = numpy.zeros(shape[1])
+
         return None
 
     def curl_ex(self):
