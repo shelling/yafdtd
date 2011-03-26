@@ -7,12 +7,9 @@ Plane as 2-D grid
 Cube as 3-D grid
 
 """
-import matplotlib
 import numpy
-import pylab
 
 from scipy.constants import epsilon_0, mu_0
-from matplotlib import _pylab_helpers, cm
 from yafdtd.algorithm import threedim
 from yafdtd.source import HardSource, TFSF
 from yafdtd import utils
