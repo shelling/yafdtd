@@ -123,10 +123,6 @@ class Plane(object):
     Only generial parameters are defined in constructor.
     The rest, related to BPML or UPML, are appended in helper functions
     """
-    update_dfield = twodim.freespace.update_dfield
-    update_efield = twodim.freespace.update_efield
-    update_bfield = twodim.freespace.update_bfield
-    update_hfield = twodim.freespace.update_hfield
 
     def __init__(self, shape):
         """
@@ -164,6 +160,38 @@ class Plane(object):
         self.hzedgex = numpy.zeros(shape[1])
 
         return None
+    
+    def update_dfield(plane):
+        """
+        """
+        plane.dxfield += 0.5 * plane.curl_hx()
+        plane.dyfield += 0.5 * plane.curl_hy()
+        plane.dzfield += 0.5 * plane.curl_hz()
+        return plane
+
+    def update_efield(plane):
+        """
+        """
+        plane.exfield = plane.dxfield
+        plane.eyfield = plane.dyfield
+        plane.ezfield = plane.dzfield
+        return plane
+
+    def update_bfield(plane):
+        """
+        """
+        plane.bxfield -= 0.5 * plane.curl_ex()
+        plane.byfield -= 0.5 * plane.curl_ey()
+        plane.bzfield -= 0.5 * plane.curl_ez()
+        return plane
+
+    def update_hfield( plane ):
+        """
+        """
+        plane.hxfield = plane.bxfield
+        plane.hyfield = plane.byfield
+        plane.hzfield = plane.bzfield
+        return plane
 
     def curl_ex(self):
         res = numpy.zeros(self.shape)
