@@ -114,7 +114,6 @@ class Plane(object):
         """
         Arguments:
         - `shape`: specify plance shape
-        - `transverse`: TM (Ez Hx Hy) or TE (Hz Ex Ey)
         """
 
         self.shape = shape
@@ -267,9 +266,8 @@ class Cube(object):
     
     def __init__(self, shape):
         """
-        
         Arguments:
-        - `abuffer`:
+        - `shape`: specify plance shape
         """
         self.shape = shape
         
