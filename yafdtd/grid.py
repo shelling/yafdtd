@@ -22,18 +22,11 @@ class String(object):
     """
     1-D grid object
     """
-    
-    update_dfield = onedim.update_dfield
-    update_efield = onedim.update_efield
-    update_bfield = onedim.update_bfield
-    update_hfield = onedim.update_hfield
 
-    update_abc = onedim.update_abc
-    
     def __init__(self, length):
         """
         giving length as quantity of cells to create a FDTD String
-        
+
         Arguments:
         - `length`: quantity of cells
         """
@@ -41,9 +34,54 @@ class String(object):
         self.efield = numpy.zeros(length)
         self.bfield = numpy.zeros(length)
         self.hfield = numpy.zeros(length)
-        self.eps    = numpy.zeros(length)
-        self.sigmae = numpy.zeros(length)
-        self.shape  = self.efield.shape
+        
+        self.shape  = (length,)
+        return None
+
+    def update_dfield(string):
+        string.dfield += 0.5 * string.curl_h()
+        return string
+
+    def update_efield(string):
+        """
+        update efield
+        """
+        string.efield = string.dfield
+        return string
+
+    def update_bfield(string):
+        """
+        update bfield
+        """
+        string.bfield += 0.5 * string.curl_e()
+        return string
+
+    def update_hfield(string):
+        """
+        update hfield
+        """
+        string.hfield = string.bfield
+        return string
+
+
+    def update_abc(self, abc={"lm1":0, "lm2":0, "rm1":0, "rm2":0}):
+        """
+        update cells of Absorbing Boundary Conditions
+        """
+        self.update_abc_left()
+        self.update_abc_right()
+        return self
+
+    def update_abc_left(self, abc={"m1":0, "m2":0}):
+        self.efield[0] = abc["m2"]
+        abc["m2"] = abc["m1"]
+        abc["m1"] = self.efield[1]
+        return None
+
+    def update_abc_right(self, abc={"m1":0, "m2":0}):
+        self.efield[-1] = abc["m2"]
+        abc["m2"] = abc["m1"]
+        abc["m1"] = self.efield[-2]
         return None
 
     def curl_e(self):
