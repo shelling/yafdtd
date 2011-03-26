@@ -10,7 +10,6 @@ Cube as 3-D grid
 import numpy
 
 from scipy.constants import epsilon_0, mu_0
-from yafdtd.algorithm import threedim
 from yafdtd.source import HardSource, TFSF
 from yafdtd import utils
 
@@ -258,11 +257,6 @@ class Plane(object):
 
 class Cube(object):
     """ Three dimension grid object """
-
-    update_dfield = threedim.freespace.update_dfield
-    update_efield = threedim.freespace.update_efield
-    update_bfield = threedim.freespace.update_bfield
-    update_hfield = threedim.freespace.update_hfield
     
     def __init__(self, shape):
         """
@@ -288,6 +282,38 @@ class Cube(object):
         self.hzfield = numpy.zeros(shape)
         
         return None
+
+    def update_dfield(self):
+        """
+        """
+        self.dxfield += 0.5 * self.curl_hx()
+        self.dyfield += 0.5 * self.curl_hy()
+        self.dzfield += 0.5 * self.curl_hz()
+        return self
+
+    def update_efield(self):
+        """
+        """
+        self.exfield = self.dxfield
+        self.eyfield = self.dyfield
+        self.ezfield = self.dzfield
+        return self
+
+    def update_bfield(self):
+        """
+        """
+        self.bxfield -= 0.5 * self.curl_ex()
+        self.byfield -= 0.5 * self.curl_ey()
+        self.bzfield -= 0.5 * self.curl_ez()
+        return self
+
+    def update_hfield(self):
+        """
+        """
+        self.hxfield = self.bxfield
+        self.hyfield = self.byfield
+        self.hzfield = self.bzfield
+        return self
 
     def curl_ex(self):
         res = numpy.zeros(self.shape)

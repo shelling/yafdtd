@@ -17,20 +17,19 @@ hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name), "w")
 hdf5.attrs["name"] = name
 hdf5.require_group("timeline")
 
-length = 61
+length = 31
 
 cube = Cube((length,length,length))
 
-for t in range(300):
+for t in range(100):
     cube.update_dfield()
     cube.update_efield()
-    cube.ezfield[30,:,:] = sin_oft(0.005*t)
+    cube.ezfield[15,15,:] = sin_oft(0.005*t)
     cube.update_bfield()
     cube.update_hfield()
     
     hdf5.require_group("timeline/"+str(t))
-    hdf5["timeline"][str(t)]["ez"] = cube.ezfield[:,:,30]
+    hdf5["timeline"][str(t)]["ez"] = cube.ezfield[:,:,15]
     print t
 
 hdf5.close()
-open(outdir)
