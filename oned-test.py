@@ -33,7 +33,8 @@ for t in range(0,300):
     string.efield[15] = source.sin_oft(t*dt, f)
     string.update_bfield()
     string.update_hfield()
-    # string.plot("/tmp/%.3d.png",t)
+
+    plot(string.efield, "/tmp/%.3d.png", t)
     
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ex"] = string.efield

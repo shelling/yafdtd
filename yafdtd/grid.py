@@ -102,18 +102,6 @@ class String(object):
         return self
 
 
-    def plot(self, pattern, id, intensity=[-1,1]):
-        """
-        plot the String instance to a file
-        
-        Arguments:
-        - `pattern`: filename pattern
-        """
-        utils.plot(self.efield, pattern, id, intensity)
-        return None
-
-
-
 class Plane(object):
     """
     Two dimension grid object
