@@ -27,12 +27,13 @@ class String(object):
         Arguments:
         - `length`: quantity of cells
         """
+        self.shape  = (length,)
+        
         self.dfield = numpy.zeros(length)
         self.efield = numpy.zeros(length)
         self.bfield = numpy.zeros(length)
         self.hfield = numpy.zeros(length)
-        
-        self.shape  = (length,)
+
         return None
 
     def update_dfield(string):
@@ -134,11 +135,13 @@ class Plane(object):
         self.hyfield = numpy.zeros(shape)
         self.hzfield = numpy.zeros(shape)
 
+        # TM edge
         self.hxedgey = numpy.zeros(shape[0])
         self.hyedgex = numpy.zeros(shape[1])
         self.ezedgey = numpy.zeros(shape[0])
         self.ezedgex = numpy.zeros(shape[1])
 
+        # TE edge
         self.exedgey = numpy.zeros(shape[0])
         self.eyedgex = numpy.zeros(shape[1])
         self.hzedgey = numpy.zeros(shape[0])
