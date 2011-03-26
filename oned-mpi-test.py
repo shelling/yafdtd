@@ -5,7 +5,7 @@ import os, csv, re, commands
 from mpi4py import MPI
 
 from yafdtd import source
-from yafdtd.algorithm.onedim import *
+
 from yafdtd.grid import String
 from yafdtd.utils import *
 

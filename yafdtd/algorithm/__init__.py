@@ -1,2 +1,1 @@
-import onedim
 import twodim

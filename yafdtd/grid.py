@@ -13,7 +13,7 @@ import pylab
 
 from scipy.constants import epsilon_0, mu_0
 from matplotlib import _pylab_helpers, cm
-from yafdtd.algorithm import onedim, twodim, threedim
+from yafdtd.algorithm import twodim, threedim
 from yafdtd.source import HardSource, TFSF
 from yafdtd import utils
 
