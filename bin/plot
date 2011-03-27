@@ -13,9 +13,9 @@ hdf5 = h5py.File(sys.argv[1],"r")
 outdir = dirname(hdf5.filename) + "/charts"
 prepare(outdir)
 
-pattern = "%s/%s-%%.%ds.png" % (outdir, hdf5.attrs["name"], order(hdf5["timeline"]))
+pattern = "%s/%s-%%.%dd.png" % (outdir, hdf5.attrs["name"], order(hdf5["timeline"]))
 
-processes = [Process(target=plot, args=(t.get("ex"), pattern, basename(t.name))) for t in hdf5["timeline"].values()]
+processes = [Process(target=plot, args=(t.get("ex"), pattern, int(basename(t.name)))) for t in hdf5["timeline"].values()]
 
 batch(processes, 60)
 
