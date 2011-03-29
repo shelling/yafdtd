@@ -4,7 +4,7 @@
 import sys, os, math, h5py, numpy
 
 from yafdtd.source import HardSource, TFSF, sin_oft
-from yafdtd.grid import Plane
+from yafdtd.grid import Plane, PBCPlane
 from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
 
@@ -24,9 +24,8 @@ dt = dx/c
 sigma = 5000
 
 plane = Plane((length,length))
-# plane.append( upml.UPML(plane.shape, 8) )
-# plane.append( TFSF(length, function=sin_oft, thick=edge) )
-# plane.append( HardSource(sin_oft, (10,), (15,15) ) )
+plane = PBCPlane(plane)
+plane.pbcx = False
 
 
 for t in range(0,100):

@@ -254,28 +254,60 @@ class Plane(object):
         res[0,0] = self.hyfield[0,0] - self.hyedgex[0] - self.hxfield[0,0] + self.hxedgey[0]
         return res
 
-    def update_epbc(self, x=1, y=1):
+class PlaneDecorator(Plane):
+    def __init__(self, orig):
+        self.__dict__ = orig.__dict__
+        if orig.__class__ != Plane:
+            self.__class__.__bases__ = (orig.__class__,)
+        return None
+
+class PBCPlane(PlaneDecorator):
+    def __init__(self, orig):
+        super(PBCPlane, self).__init__(orig)
+        self.pbcx = True
+        self.pbcy = True
+        return None
+
+    def update_epbc(self, ezedgex=None, eyedgex=None, ezedgey=None, exedgey=None):
         """
         """
-        if x==1:
-            self.eyedgex = self.eyfield[0,:] # pbc x, TE
+        if self.pbcx:
             self.ezedgex = self.ezfield[0,:] # pbc x, TM
-        if y==1:
-            self.exedgey = self.exfield[:,0] # pbc y, TE
+            self.eyedgex = self.eyfield[0,:] # pbc x, TE
+        if isinstance(ezedgex, numpy.ndarray):
+            self.ezedgex = ezedgex           # pbc x, TM, custom
+        if isinstance(eyedgex, numpy.ndarray):
+            self.eyedgex = eyedgex           # pbc x, TE, custom
+
+        if self.pbcy:
             self.ezedgey = self.ezfield[:,0] # pbc y, TM
+            self.exedgey = self.exfield[:,0] # pbc y, TE
+        if isinstance(ezedgey, numpy.ndarray):
+            self.ezedgey = ezedgey           # pbc y, TM, custom
+        if isinstance(exedgey, numpy.ndarray):
+            self.exedgey = exedgey           # pbc y, TE, custom
         return self
 
-    def update_hpbc(self, x=1, y=1):
+    def update_hpbc(self, hyedgex=None, hzedgex=None, hxedgey=None, hzedgey=None):
         """
         """
         xmax = self.shape[0]-1
         ymax = self.shape[1]-1
-        if x==1:
+        if self.pbcx:
             self.hyedgex = self.hyfield[xmax,:] # pbc x, TM
             self.hzedgex = self.hzfield[xmax,:] # pbc x, TE
-        if y==1:
+        if isinstance(hyedgex, numpy.ndarray):
+            self.hyedgex = hyedgex              # pbc x, TM, custom
+        if isinstance(hzedgex, numpy.ndarray):
+            self.hzedgex = hzedgex              # pbc x, TE, custom
+
+        if self.pbcy:
             self.hxedgey = self.hxfield[:,ymax] # pbc y, TM
             self.hzedgey = self.hzfield[:,ymax] # pbc y, TE
+        if isinstance(hxedgey, numpy.ndarray):
+            self.hxedgey = hxedgey              # pbc y, TM, custom
+        if isinstance(hzedgey, numpy.ndarray):
+            self.hzedgey = hzedgey              # pbc y, TE, custom
         return self
 
 class Cube(object):
