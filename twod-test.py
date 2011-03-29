@@ -18,10 +18,9 @@ hdf5.attrs["name"] = name
 hdf5.require_group("timeline")
 
 length = 61
-edge = 8
+
 dx = 0.01
 dt = dx/c
-sigma = 5000
 
 plane = Plane((length,length))
 plane = PBCPlane(plane)
