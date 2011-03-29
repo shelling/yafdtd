@@ -254,6 +254,29 @@ class Plane(object):
         res[0,0] = self.hyfield[0,0] - self.hyedgex[0] - self.hxfield[0,0] + self.hxedgey[0]
         return res
 
+    def update_epbc(self, x=1, y=1):
+        """
+        """
+        if x==1:
+            self.eyedgex = self.eyfield[0,:] # pbc x, TE
+            self.ezedgex = self.ezfield[0,:] # pbc x, TM
+        if y==1:
+            self.exedgey = self.exfield[:,0] # pbc y, TE
+            self.ezedgey = self.ezfield[:,0] # pbc y, TM
+        return self
+
+    def update_hpbc(self, x=1, y=1):
+        """
+        """
+        xmax = self.shape[0]-1
+        ymax = self.shape[1]-1
+        if x==1:
+            self.hyedgex = self.hyfield[xmax,:] # pbc x, TM
+            self.hzedgex = self.hzfield[xmax,:] # pbc x, TE
+        if y==1:
+            self.hxedgey = self.hxfield[:,ymax] # pbc y, TM
+            self.hzedgey = self.hzfield[:,ymax] # pbc y, TE
+        return self
 
 class Cube(object):
     """ Three dimension grid object """
