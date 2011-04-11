@@ -4,7 +4,7 @@
 import sys, os, math, h5py, numpy
 
 from yafdtd.source import HardSource, TFSF, sin_oft
-from yafdtd.grid import Plane, PBCPlane
+from yafdtd.grid import Plane, PBCPlane, UPMLPlane
 from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
 
@@ -25,6 +25,8 @@ dt = dx/c
 plane = Plane((length,length))
 plane = PBCPlane(plane)
 plane.pbcx = False
+
+plane = UPMLPlane(plane)
 
 
 for t in range(0,100):

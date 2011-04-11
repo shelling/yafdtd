@@ -310,6 +310,29 @@ class PBCPlane(PlaneDecorator):
             self.hzedgey = hzedgey              # pbc y, TE, custom
         return self
 
+
+class UPMLPlane(PlaneDecorator):
+    def __init__(self, orig):
+        super(UPMLPlane, self).__init__(orig)
+        return None
+
+    def update_dfield(self):
+        """
+        """
+        self.dxfield += 0.5 * self.curl_hx()
+        self.dyfield += 0.5 * self.curl_hy()
+        self.dzfield += 0.5 * self.curl_hz()
+        return self
+
+    def update_bfield(self):
+        """
+        """
+        self.bxfield -= 0.5 * self.curl_ex()
+        self.byfield -= 0.5 * self.curl_ey()
+        self.bzfield -= 0.5 * self.curl_ez()
+        return self
+
+
 class Cube(object):
     """ Three dimension grid object """
     
