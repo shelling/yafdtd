@@ -147,37 +147,37 @@ class Plane(object):
 
         return None
     
-    def update_dfield(plane):
+    def update_dfield(self):
         """
         """
-        plane.dxfield += 0.5 * plane.curl_hx()
-        plane.dyfield += 0.5 * plane.curl_hy()
-        plane.dzfield += 0.5 * plane.curl_hz()
-        return plane
+        self.dxfield += 0.5 * self.curl_hx()
+        self.dyfield += 0.5 * self.curl_hy()
+        self.dzfield += 0.5 * self.curl_hz()
+        return self
 
-    def update_efield(plane):
+    def update_efield(self):
         """
         """
-        plane.exfield = plane.dxfield
-        plane.eyfield = plane.dyfield
-        plane.ezfield = plane.dzfield
-        return plane
+        self.exfield = self.dxfield
+        self.eyfield = self.dyfield
+        self.ezfield = self.dzfield
+        return self
 
-    def update_bfield(plane):
+    def update_bfield(self):
         """
         """
-        plane.bxfield -= 0.5 * plane.curl_ex()
-        plane.byfield -= 0.5 * plane.curl_ey()
-        plane.bzfield -= 0.5 * plane.curl_ez()
-        return plane
+        self.bxfield -= 0.5 * self.curl_ex()
+        self.byfield -= 0.5 * self.curl_ey()
+        self.bzfield -= 0.5 * self.curl_ez()
+        return self
 
-    def update_hfield( plane ):
+    def update_hfield(self):
         """
         """
-        plane.hxfield = plane.bxfield
-        plane.hyfield = plane.byfield
-        plane.hzfield = plane.bzfield
-        return plane
+        self.hxfield = self.bxfield
+        self.hyfield = self.byfield
+        self.hzfield = self.bzfield
+        return self
 
     def curl_ex(self):
         res = numpy.zeros(self.shape)
