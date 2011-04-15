@@ -27,20 +27,22 @@ plane = PBCPlane(plane)
 plane.pbcx = False
 
 plane = UPMLPlane(plane)
+plane.pmly = False
+plane.set_pml()
 
 
-for t in range(0,100):
+for t in range(0,300):
     plane.update_hpbc()
     plane.update_dfield()
     plane.update_efield()
 
-    plane.ezfield[0,0] = sin_oft(0.005*t)
+    plane.ezfield[30,50] = sin_oft(0.005*t)
 
     plane.update_epbc()
     plane.update_bfield()
     plane.update_hfield()
     
-    plane.hzfield[0,0] = sin_oft(0.005*t)
+    plane.hzfield[30,30] = sin_oft(0.005*t)
 
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ez"] = plane.ezfield
