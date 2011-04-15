@@ -359,6 +359,18 @@ class UPMLPlane(PlaneDecorator):
     def set_pml(self):
         """
         """
+        if self.pmlx:
+            for i in range(0, self.pml_thick):
+                xn = 0.33 * numpy.power((self.pml_thick - i)/float(self.pml_thick), 3)
+                self.i1[i,:] = self.i1[-1-i,:] = xn
+                self.i2[i,:] = self.i2[-1-i,:] = 1.0 / ( 1.0 + xn )
+                self.i3[i,:] = self.i3[-1-i,:] = ( 1.0 - xn ) / ( 1.0 + xn )
+        if self.pmly:
+            for j in range(0, self.pml_thick):
+                xn = 0.33 * numpy.power((self.pml_thick - j)/float(self.pml_thick), 3)
+                self.j1[:,j] = self.j1[:,-1-j] = xn
+                self.j2[:,j] = self.j2[:,-1-j] = 1.0 / ( 1.0 + xn )
+                self.j3[:,j] = self.j3[:,-1-j] = ( 1.0 - xn ) / ( 1.0 + xn )
         return self
 
     def reset_pml(self):
