@@ -314,23 +314,64 @@ class PBCPlane(PlaneDecorator):
 class UPMLPlane(PlaneDecorator):
     def __init__(self, orig):
         super(UPMLPlane, self).__init__(orig)
+
+        self.pml_thick = 5
+
+        self.pmlx = True
+        self.pmly = True
+
+        self.idx = numpy.zeros(self.shape)
+        self.idy = numpy.zeros(self.shape)
+        self.ibx = numpy.zeros(self.shape)
+        self.iby = numpy.zeros(self.shape)
+
+        self.i1 = numpy.zeros(self.shape)
+        self.j1 = numpy.zeros(self.shape)
+
+        self.i2 = numpy.ones(self.shape)
+        self.j2 = numpy.ones(self.shape)
+
+        self.i3 = numpy.ones(self.shape)
+        self.j3 = numpy.ones(self.shape)
+
         return None
 
     def update_dfield(self):
         """
         """
-        self.dxfield += 0.5 * self.curl_hx()
-        self.dyfield += 0.5 * self.curl_hy()
-        self.dzfield += 0.5 * self.curl_hz()
+        self.idx += self.curl_hx()
+        self.idy += self.curl_hy()
+        self.dxfield = self.j3 * self.dxfield + self.j2 * 0.5 * ( self.curl_hx() + self.i1 * self.idx )
+        self.dyfield = self.i3 * self.dyfield + self.i2 * 0.5 * ( self.curl_hy() + self.j1 * self.idy )
+        self.dzfield = self.i3 * self.j3 * self.dzfield + self.i2 * self.j2 * 0.5 * self.curl_hz()
         return self
 
     def update_bfield(self):
         """
         """
-        self.bxfield -= 0.5 * self.curl_ex()
-        self.byfield -= 0.5 * self.curl_ey()
-        self.bzfield -= 0.5 * self.curl_ez()
+        self.ibx += self.curl_ex()
+        self.iby += self.curl_ey()
+        self.bxfield = self.j3 * self.bxfield - self.j2 * 0.5 * ( self.curl_ex() + self.i1 * self.ibx )
+        self.byfield = self.i3 * self.byfield - self.i2 * 0.5 * ( self.curl_ey() + self.j1 * self.iby )
+        self.bzfield = self.i3 * self.j3 * self.bzfield - self.i2 * self.j2 * 0.5 * self.curl_ez()
         return self
+
+    def set_pml(self):
+        """
+        """
+        return self
+
+    def reset_pml(self):
+        """
+        """
+        self.i1.fill(0.0)
+        self.j1.fill(0.0)
+        self.i2.fill(1.0)
+        self.j2.fill(1.0)
+        self.i3.fill(1.0)
+        self.j3.fill(1.0)
+        return self
+
 
 
 class Cube(object):
