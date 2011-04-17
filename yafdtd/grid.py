@@ -43,7 +43,7 @@ class String(object):
         """
         update efield
         """
-        string.efield = string.dfield
+        string.efield = string.dfield.copy()
         return string
 
     def update_bfield(string):
@@ -57,7 +57,7 @@ class String(object):
         """
         update hfield
         """
-        string.hfield = string.bfield
+        string.hfield = string.bfield.copy()
         return string
 
 
@@ -158,9 +158,9 @@ class Plane(object):
     def update_efield(self):
         """
         """
-        self.exfield = self.dxfield
-        self.eyfield = self.dyfield
-        self.ezfield = self.dzfield
+        self.exfield = self.dxfield.copy()
+        self.eyfield = self.dyfield.copy()
+        self.ezfield = self.dzfield.copy()
         return self
 
     def update_bfield(self):
@@ -174,9 +174,9 @@ class Plane(object):
     def update_hfield(self):
         """
         """
-        self.hxfield = self.bxfield
-        self.hyfield = self.byfield
-        self.hzfield = self.bzfield
+        self.hxfield = self.bxfield.copy()
+        self.hyfield = self.byfield.copy()
+        self.hzfield = self.bzfield.copy()
         return self
 
     def curl_ex(self):
@@ -425,9 +425,9 @@ class Cube(object):
     def update_efield(self):
         """
         """
-        self.exfield = self.dxfield
-        self.eyfield = self.dyfield
-        self.ezfield = self.dzfield
+        self.exfield = self.dxfield.copy()
+        self.eyfield = self.dyfield.copy()
+        self.ezfield = self.dzfield.copy()
         return self
 
     def update_bfield(self):
@@ -441,9 +441,9 @@ class Cube(object):
     def update_hfield(self):
         """
         """
-        self.hxfield = self.bxfield
-        self.hyfield = self.byfield
-        self.hzfield = self.bzfield
+        self.hxfield = self.bxfield.copy()
+        self.hyfield = self.byfield.copy()
+        self.hzfield = self.bzfield.copy()
         return self
 
     def curl_ex(self):
