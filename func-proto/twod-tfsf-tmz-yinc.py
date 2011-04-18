@@ -13,14 +13,6 @@ from scipy.constants import c, epsilon_0, mu_0
 
 length = 30
 
-def puts(*things):
-    for item in things:
-        print item
-    return None
-
-String.inspect = (lambda self: puts(self.dfield.round(2), self.efield.round(2), self.bfield.round(2), self.hfield.round(2), ""))
-Plane.inspect = (lambda self: puts(self.dzfield.round(2), self.ezfield.round(2), self.bxfield.round(2), self.hxfield.round(2), self.byfield.round(2), self.hyfield.round(2)))
-
 string = String(length)
 string.enter = 2
 plane = Plane((length,length))
@@ -34,7 +26,7 @@ plane.set_pml()
 for t in range(0,100):
     print t
     string.update(sin(2*pi*0.01*t))
-    string.inspect()
+    print string.inspect()
 
     plane.update_hpbc()
     plane.update_dfield()
@@ -57,5 +49,6 @@ for t in range(0,100):
     
     plot(string.efield, "/tmp/string-%.3d.png" , t)
     imshow(plane.ezfield, "/tmp/%.3d.png", t)
-plane.inspect()
+
+print plane.inspect()
 

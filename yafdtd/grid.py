@@ -101,6 +101,16 @@ class String(object):
         self.update_hfield()
         return self
 
+    def inspect(self):
+        result = ""
+        for item in [
+            self.dfield,
+            self.efield,
+            self.bfield,
+            self.hfield
+            ]:
+            result += str(item.round(2)) + "\n"
+        return result
 
 class Plane(object):
     """
@@ -253,6 +263,25 @@ class Plane(object):
             res[0,j] = self.hyfield[0,j] - self.hyedgex[j] - self.hxfield[0,j] + self.hxfield[0,j-1]
         res[0,0] = self.hyfield[0,0] - self.hyedgex[0] - self.hxfield[0,0] + self.hxedgey[0]
         return res
+
+    def inspect(self):
+        result = ""
+        for item in [
+            self.dxfield,
+            self.dyfield,
+            self.dzfield,
+            self.exfield,
+            self.eyfield,
+            self.ezfield,
+            self.bxfield,
+            self.byfield,
+            self.bzfield,
+            self.hxfield,
+            self.hyfield,
+            self.hzfield
+            ]:
+            result += str(item.round(2)) + "\n"
+        return result
 
 class PlaneDecorator(Plane):
     def __init__(self, orig):
