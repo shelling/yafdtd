@@ -87,18 +87,18 @@ class String(object):
     def curl_h(self):
         return numpy.array([0] + [self.hfield[x-1] - self.hfield[x] for x in range(1, self.shape[0])])
 
-    def update_source(self, t):
-        """
-        write the new value of source into problem region
-        
-        Arguments:
-        - `t`: current timestep
-        """
-        if isinstance(self.source, HardSource):
-            self.efield[self.source.position] = self.source.function(t, *(self.source.options))
-        elif isinstance(self.source, TFSF):
-            # not yet implement
-            pass
+    def update_source(self, source):
+        """ insert value into self.dfield[self.enter] """
+        self.dfield[self.enter] = source
+        return self
+
+    def update(self, source):
+        self.update_dfield()
+        self.update_source(source)
+        self.update_efield()
+        self.update_abc()
+        self.update_bfield()
+        self.update_hfield()
         return self
 
 
