@@ -11,8 +11,5 @@ setup(
   url             = None,
   packages        = [
           'yafdtd',
-          'yafdtd.algorithm',
-          'yafdtd.algorithm.twodim',
-          'yafdtd.geometry',
   ],
 )
