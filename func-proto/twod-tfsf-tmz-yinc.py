@@ -16,6 +16,18 @@ class TFSFPlane(PlaneDecorator):
         self.xinc = String(self.shape[0])
         self.yinc = String(self.shape[1])
         return None
+    def update_dtfsf(self):
+        self.dzfield[10:21,10] += 0.5 * self.yinc.hfield[10]
+        self.dzfield[10:21,20] -= 0.5 * self.yinc.hfield[20]
+        return self
+    def update_btfsf(self):
+        # y edge
+        self.bxfield[10:21,9] += 0.5 * self.yinc.dfield[10]
+        self.bxfield[10:21,20]-= 0.5 * self.yinc.dfield[20]
+        # x edge
+        self.byfield[9,10:21] -= 0.5 * self.yinc.dfield[10:21]
+        self.byfield[20,10:21]+= 0.5 * self.yinc.dfield[10:21]
+        return self
 
 length = 30
 
@@ -38,22 +50,11 @@ for t in range(0,100):
     print plane.yinc.inspect()
 
     plane.update_hpbc()
-    plane.update_dfield()
-
-    plane.dzfield[10:21,10] += 0.5 * plane.yinc.hfield[10]
-    plane.dzfield[10:21,20] -= 0.5 * plane.yinc.hfield[20]
-
+    plane.update_dfield().update_dtfsf()
     plane.update_efield()
+
     plane.update_epbc()
-    plane.update_bfield()
-
-    # y edge
-    plane.bxfield[10:21,9] += 0.5 * plane.yinc.dfield[10]
-    plane.bxfield[10:21,20] -= 0.5 * plane.yinc.dfield[20]
-    # x edge
-    plane.byfield[9,10:21] -= 0.5 * plane.yinc.dfield[10:21]
-    plane.byfield[20,10:21] += 0.5 * plane.yinc.dfield[10:21]
-
+    plane.update_bfield().update_btfsf()
     plane.update_hfield()
     
     plot(plane.yinc.efield, "/tmp/string-%.3d.png" , t)
