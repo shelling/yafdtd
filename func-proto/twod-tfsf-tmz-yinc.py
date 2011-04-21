@@ -17,16 +17,16 @@ class TFSFPlane(PlaneDecorator):
         self.yinc = String(self.shape[1])
         return None
     def update_dtfsf(self):
-        self.dzfield[10:21,10] += 0.5 * self.yinc.hfield[10]
-        self.dzfield[10:21,20] -= 0.5 * self.yinc.hfield[20]
+        self.dzfield[self.xlow:self.xhigh+1, self.ylow] += 0.5 * self.yinc.hfield[self.ylow]
+        self.dzfield[self.xlow:self.xhigh+1, self.yhigh]-= 0.5 * self.yinc.hfield[self.yhigh]
         return self
     def update_btfsf(self):
         # y edge
-        self.bxfield[10:21,9] += 0.5 * self.yinc.dfield[10]
-        self.bxfield[10:21,20]-= 0.5 * self.yinc.dfield[20]
+        self.bxfield[self.xlow:self.xhigh+1, self.ylow-1]+= 0.5 * self.yinc.dfield[self.ylow]
+        self.bxfield[self.xlow:self.xhigh+1, self.yhigh] -= 0.5 * self.yinc.dfield[self.yhigh]
         # x edge
-        self.byfield[9,10:21] -= 0.5 * self.yinc.dfield[10:21]
-        self.byfield[20,10:21]+= 0.5 * self.yinc.dfield[10:21]
+        self.byfield[self.xlow-1, self.ylow:self.yhigh+1]-= 0.5 * self.yinc.dfield[self.ylow:self.yhigh+1]
+        self.byfield[self.xhigh, self.ylow:self.yhigh+1] += 0.5 * self.yinc.dfield[self.ylow:self.yhigh+1]
         return self
 
 length = 30
@@ -42,6 +42,10 @@ plane.set_pml()
 
 plane = TFSFPlane(plane)
 plane.yinc.enter = 2
+plane.xlow  = 5
+plane.xhigh = 25
+plane.ylow  = 8
+plane.yhigh = 22
 
 
 for t in range(0,100):
