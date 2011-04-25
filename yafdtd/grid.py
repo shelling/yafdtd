@@ -443,6 +443,36 @@ class YTFSFPlane(PlaneDecorator):
             self.byfield[self.xtfsf[1],   self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.tminc.dfield[self.ytfsf[0]:self.ytfsf[1]+1]
         return self
 
+class DispersivePlane(PlaneDecorator):
+    def __init__(self, orig):
+        super(DispersivePlane, self).__init__(orig)
+        self.epsilon_r = numpy.ones(self.shape)
+        self.mu_r      = numpy.ones(self.shape)
+        return None
+    def update_efield(self, *polar):
+        self.exfield  = self.dxfield.copy()
+        self.eyfield  = self.dyfield.copy()
+        self.ezfield  = self.dzfield.copy()
+        for p in polar:
+            self.exfield += polar.x
+            self.eyfield += polar.y
+            self.ezfield += polar.z
+        self.exfield /= self.epsilon_r
+        self.eyfield /= self.epsilon_r
+        self.ezfield /= self.epsilon_r
+        return self
+    def update_hfield(self, *polar):
+        self.hxfield  = self.bxfield.copy()
+        self.hyfield  = self.byfield.copy()
+        self.hzfield  = self.bzfield.copy()
+        for p in polar:
+            self.hxfield += polar.x
+            self.hyfield += polar.y
+            self.hzfield += polar.z
+        self.hxfield /= self.mu_r
+        self.hyfield /= self.mu_r
+        self.hzfield /= self.mu_r
+        return self
 
 class Cube(object):
     """ Three dimension grid object """
