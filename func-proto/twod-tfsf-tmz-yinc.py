@@ -29,18 +29,26 @@ class DispersivePlane(PlaneDecorator):
         return None
     def update_efield(self, *polar):
         self.exfield  = self.dxfield.copy()
-        self.exfield /= self.epsilon_r
         self.eyfield  = self.dyfield.copy()
-        self.eyfield /= self.epsilon_r
         self.ezfield  = self.dzfield.copy()
+        for p in polar:
+            self.exfield += polar.x
+            self.eyfield += polar.y
+            self.ezfield += polar.z
+        self.exfield /= self.epsilon_r
+        self.eyfield /= self.epsilon_r
         self.ezfield /= self.epsilon_r
         return self
     def update_hfield(self, *polar):
         self.hxfield  = self.bxfield.copy()
-        self.hxfield /= self.mu_r
         self.hyfield  = self.byfield.copy()
-        self.hyfield /= self.mu_r
         self.hzfield  = self.bzfield.copy()
+        for p in polar:
+            self.hxfield += polar.x
+            self.hyfield += polar.y
+            self.hzfield += polar.z
+        self.hxfield /= self.mu_r
+        self.hyfield /= self.mu_r
         self.hzfield /= self.mu_r
         return self
 
