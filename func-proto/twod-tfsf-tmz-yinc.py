@@ -26,35 +26,6 @@ class DispersivePlane(PlaneDecorator):
         self.hzfield = self.bzfield / self.mu_r
         return self
 
-class YTFSFPlane(PlaneDecorator):
-    def __init__(self, orig):
-        super(YTFSFPlane, self).__init__(orig)
-        self.tminc = String(self.shape[1])
-        self.teinc = String(self.shape[1])
-        self.xtfsf = [10, self.shape[0]-10]
-        self.ytfsf = [10, self.shape[1]-10]
-        return None
-    def update_dtfsf(self):
-        if self.xtfsf == [None, None]:
-            self.dzfield[:, self.ytfsf[0]]  += 0.5 * self.tminc.hfield[self.ytfsf[0]]
-            self.dzfield[:, self.ytfsf[1]]  -= 0.5 * self.tminc.hfield[self.ytfsf[1]]
-        else:
-            self.dzfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[0]]  += 0.5 * self.tminc.hfield[self.ytfsf[0]]
-            self.dzfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[1]]  -= 0.5 * self.tminc.hfield[self.ytfsf[1]]
-        return self
-    def update_btfsf(self):
-        if self.xtfsf == [None, None]:
-            # y edge
-            self.bxfield[:, self.ytfsf[0]-1]+= 0.5 * self.tminc.dfield[self.ytfsf[0]]
-            self.bxfield[:, self.ytfsf[1]]  -= 0.5 * self.tminc.dfield[self.ytfsf[1]]
-        else:
-            # y edge
-            self.bxfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[0]-1] += 0.5 * self.tminc.dfield[self.ytfsf[0]]
-            self.bxfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[1]]   -= 0.5 * self.tminc.dfield[self.ytfsf[1]]
-            # x edge
-            self.byfield[self.xtfsf[0]-1, self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.tminc.dfield[self.ytfsf[0]:self.ytfsf[1]+1]
-            self.byfield[self.xtfsf[1],   self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.tminc.dfield[self.ytfsf[0]:self.ytfsf[1]+1]
-        return self
 
 length = 30
 
@@ -70,6 +41,9 @@ plane.set_pml()
 plane = YTFSFPlane(plane)
 plane.tminc.enter = 2
 plane.xtfsf = [None, None]
+
+plane = DispersivePlane(plane)
+plane.epsilon_r[12:18,12:18] = 12
 
 
 for t in range(0,100):
