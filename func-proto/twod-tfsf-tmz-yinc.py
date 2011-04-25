@@ -5,9 +5,21 @@ import sys, os, math, h5py, numpy
 sys.path.append(".")
 
 from math import sin, pi
-from yafdtd.grid import String, Plane, PBCPlane, UPMLPlane, PlaneDecorator
+from yafdtd.grid import String, Plane, PBCPlane, UPMLPlane, YTFSFPlane, PlaneDecorator
 from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
+
+class PolarDPlane(object):
+    def __init__(self, shape):
+        self.x = numpy.zeros(shape)
+        self.y = numpy.zeros(shape)
+        self.z = numpy.zeros(shape)
+        self.xp = numpy.zeros(shape)
+        self.yp = numpy.zeros(shape)
+        self.zp = numpy.zeros(shape)
+        return None
+    def update(self, plane):
+        return self
 
 class DispersivePlane(PlaneDecorator):
     def __init__(self, orig):
@@ -15,15 +27,21 @@ class DispersivePlane(PlaneDecorator):
         self.epsilon_r = numpy.ones(self.shape)
         self.mu_r      = numpy.ones(self.shape)
         return None
-    def update_efield(self):
-        self.exfield = self.dxfield / self.epsilon_r
-        self.eyfield = self.dyfield / self.epsilon_r
-        self.ezfield = self.dzfield / self.epsilon_r
+    def update_efield(self, *polar):
+        self.exfield  = self.dxfield.copy()
+        self.exfield /= self.epsilon_r
+        self.eyfield  = self.dyfield.copy()
+        self.eyfield /= self.epsilon_r
+        self.ezfield  = self.dzfield.copy()
+        self.ezfield /= self.epsilon_r
         return self
-    def update_hfield(self):
-        self.hxfield = self.bxfield / self.mu_r
-        self.hyfield = self.byfield / self.mu_r
-        self.hzfield = self.bzfield / self.mu_r
+    def update_hfield(self, *polar):
+        self.hxfield  = self.bxfield.copy()
+        self.hxfield /= self.mu_r
+        self.hyfield  = self.byfield.copy()
+        self.hyfield /= self.mu_r
+        self.hzfield  = self.bzfield.copy()
+        self.hzfield /= self.mu_r
         return self
 
 
@@ -43,7 +61,7 @@ plane.tminc.enter = 2
 plane.xtfsf = [None, None]
 
 plane = DispersivePlane(plane)
-plane.epsilon_r[12:18,12:18] = 12
+plane.epsilon_r[13:17,13:17] = 12
 
 
 for t in range(0,100):
