@@ -454,9 +454,9 @@ class DispersivePlane(PlaneDecorator):
         self.eyfield  = self.dyfield.copy()
         self.ezfield  = self.dzfield.copy()
         for p in polar:
-            self.exfield += polar.x
-            self.eyfield += polar.y
-            self.ezfield += polar.z
+            self.exfield -= p.x
+            self.eyfield -= p.y
+            self.ezfield -= p.z
         self.exfield /= self.epsilon_r
         self.eyfield /= self.epsilon_r
         self.ezfield /= self.epsilon_r
@@ -466,9 +466,9 @@ class DispersivePlane(PlaneDecorator):
         self.hyfield  = self.byfield.copy()
         self.hzfield  = self.bzfield.copy()
         for p in polar:
-            self.hxfield += polar.x
-            self.hyfield += polar.y
-            self.hzfield += polar.z
+            self.hxfield -= p.x # should verify + or -
+            self.hyfield -= p.y
+            self.hzfield -= p.z
         self.hxfield /= self.mu_r
         self.hyfield /= self.mu_r
         self.hzfield /= self.mu_r
