@@ -2,7 +2,6 @@
 
 import sys, numpy, scipy, matplotlib, pylab
 sys.path.append(".")
-from yafdtd.utils import fft
 
 freq = 10**19
 dt = 1./10**20
