@@ -29,7 +29,8 @@ for t in range(100):
     cube.update_hfield()
     
     hdf5.require_group("timeline/"+str(t))
-    hdf5["timeline"][str(t)]["ez"] = cube.ezfield[:,:,15]
+    # hdf5["timeline"][str(t)]["ez"] = cube.ezfield[:,:,15]
+    hdf5["timeline"][str(t)]["ez"] = cube.ezfield
     print t
 
 hdf5.close()
