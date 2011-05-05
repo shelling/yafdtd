@@ -2,6 +2,7 @@
 #-*- mode: python -*-
 
 import sys, os, csv, re, shutil, h5py
+sys.path.append(".")
 
 from yafdtd import source
 from yafdtd.grid import String
