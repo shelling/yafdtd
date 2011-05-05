@@ -2,6 +2,7 @@
 #-*- mode: python -*-
 
 import sys, os, math, h5py, numpy
+sys.path.append(".")
 
 from yafdtd.source import sin_oft
 from yafdtd.grid import Cube
