@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+#-*- mode: python -*-
+
+import sys, numpy, h5py
+sys.path.append(".")
+from numpy import abs
+from numpy.fft import fft, fftshift
+from yafdtd.utils import imshow
+
+hdf5 = h5py.File(sys.argv[1], "r")
+
+freq = hdf5.attrs["freq"]; print freq
+deltat = hdf5.attrs["deltat"]; print deltat
+periodForPhasor = hdf5.attrs["periodForPhasor"]; print periodForPhasor
+
+shape = [int(periodForPhasor/(freq*deltat))]
+shape.extend(hdf5["/timeline/1/ez"].shape); print shape
+
+start = len(hdf5["timeline"]) - shape[0]
+t = numpy.arange(start,start+shape[0])
+f = numpy.arange(-shape[0]/2,shape[0]/2)/(deltat*shape[0]); print f
+
+timedomain = numpy.zeros(shape)
+for i in range(shape[0]):
+    timedomain[i] = hdf5["timeline"][str(start+i)]["ez"]
+
+freqdomain = fftshift(abs(fft(timedomain, axis=0)), axes=(0,))/shape[0]
+
+# for i in range(len(f)):
+#     if abs(f[i]) == freq:
+#         imshow(freqdomain[i], "/tmp/phasor-%.3d", i)
+#         print i
+
+for i in range(shape[0]):
+    imshow(freqdomain[i], "/tmp/phasor-%.3d", f[i])
