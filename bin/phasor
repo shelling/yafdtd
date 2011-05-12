@@ -11,7 +11,8 @@ hdf5 = h5py.File(sys.argv[1], "r")
 
 freq = hdf5.attrs["freq"]; print freq
 deltat = hdf5.attrs["deltat"]; print deltat
-periodForPhasor = hdf5.attrs["periodForPhasor"]; print periodForPhasor
+print 1.0/(freq*deltat)
+periodForPhasor = 1
 
 shape = [int(periodForPhasor/(freq*deltat))]
 shape.extend(hdf5["/timeline/1/ez"].shape); print shape
@@ -32,4 +33,4 @@ freqdomain = fftshift(abs(fft(timedomain, axis=0)), axes=(0,))/shape[0]
 #         print i
 
 for i in range(shape[0]):
-    imshow(freqdomain[i], "/tmp/phasor-%.3d", f[i])
+    imshow(freqdomain[i], "/tmp/phasor-%.3d", f[i], [0.0,1.0])

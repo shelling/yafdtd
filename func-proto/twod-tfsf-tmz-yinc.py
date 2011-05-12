@@ -57,9 +57,10 @@ class PolarDPlane(object):
         return None
 
 
-length = 100
-deltat = 3*10**-14
-freq = 2*10**12
+length = 201
+deltax = 10**(-9)
+deltat = deltax/(2*c)
+freq = 2*10**14
 
 plane = Plane((length,length))
 
@@ -67,25 +68,28 @@ plane = PBCPlane(plane)
 plane.pbcy = False
 
 plane = UPMLPlane(plane)
-plane.pmlx = False
+# plane.pmlx = False
 plane.set_pml()
 
 plane = YTFSFPlane(plane)
 plane.tminc.enter = 2
-plane.xtfsf = [None, None]
+# plane.xtfsf = [None, None]
 
 plane = DispersivePlane(plane)
 
-gold = PolarDPlane(plane.shape, a=(9.2*10**13)**2, b=0, c=1.15*10**16, d=1, dt=deltat)
+gold = PolarDPlane(plane.shape, a=(1.25663*10**16)**2, b=0, c=5.7*10**13, d=1, dt=deltat)
 gold.set_factor()
-for i in range(0,100):
-    for j in range(0,100):
-        if math.hypot(i-50,j-50) < 10:
-            gold.mask[i,j] = 1
+# for i in range(0,length):
+#     for j in range(0,length):
+#         if math.hypot(i-101,j-101) < 25:
+#             gold.mask[i,j] = 1
+#             # plane.epsilon_r[i,j] = 8
+
+gold.mask[50:151,75:126] = 1
 
 
 
-for t in range(0,1000):
+for t in range(0,3000):
     print t
     plane.tminc.update(sin(2*pi*freq*t*deltat))
     # print plane.tminc.inspect()
@@ -106,7 +110,6 @@ for t in range(0,1000):
 
 hdf5.attrs["freq"] = freq
 hdf5.attrs["deltat"] = deltat
-hdf5.attrs["periodForPhasor"] = 3.0
 hdf5.close()
 
 
