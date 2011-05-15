@@ -10,9 +10,6 @@ import yafdtd
 import numpy
 
 
-from mpmath import *
-mp.dps = 50
-
 # polynomial source and its 1-order and 2-order derivative
 def polynomial_pulse(t):
     if abs(t)<1:
