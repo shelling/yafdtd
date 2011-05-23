@@ -9,10 +9,11 @@ from yafdtd.grid import String, Plane, PBCPlane, UPMLPlane, YTFSFPlane, Dispersi
 from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
 
-outdir = "result/gold-rod"
+name = "silver-bulk"
+outdir = "result/%s" % name
 prepare(outdir)
-hdf5 = h5py.File("result/gold-rod/gold-rod.hdf5", "w")
-hdf5.attrs["name"] = "gold-rod"
+hdf5 = h5py.File("result/%s/%s.hdf5" % (name, name), "w")
+hdf5.attrs["name"] = name
 hdf5.require_group("timeline")
 
 class PolarDPlane(object):
@@ -68,24 +69,26 @@ plane = PBCPlane(plane)
 plane.pbcy = False
 
 plane = UPMLPlane(plane)
-# plane.pmlx = False
+plane.pmlx = False
+plane.pml_thick = 20
 plane.set_pml()
 
 plane = YTFSFPlane(plane)
 plane.tminc.enter = 2
-# plane.xtfsf = [None, None]
+plane.xtfsf = [None, None]
+plane.ytfsf = [25,176]
 
 plane = DispersivePlane(plane)
 
-gold = PolarDPlane(plane.shape, a=(1.25663*10**16)**2, b=0, c=5.7*10**13, d=1, dt=deltat)
-gold.set_factor()
+metal = PolarDPlane(plane.shape, a=(1.25663*10**16)**2, b=0, c=5.7*10**13, d=1, dt=deltat)
+metal.set_factor()
 # for i in range(0,length):
 #     for j in range(0,length):
 #         if math.hypot(i-101,j-101) < 25:
-#             gold.mask[i,j] = 1
+#             metal.mask[i,j] = 1
 #             # plane.epsilon_r[i,j] = 8
 
-gold.mask[50:151,75:126] = 1
+metal.mask[:,70:100] = 1
 
 
 
@@ -96,8 +99,8 @@ for t in range(0,3000):
 
     plane.update_hpbc()
     plane.update_dfield().update_dtfsf()
-    gold.update(plane)
-    plane.update_efield(gold)
+    metal.update(plane)
+    plane.update_efield(metal)
 
     plane.update_epbc()
     plane.update_bfield().update_btfsf()
