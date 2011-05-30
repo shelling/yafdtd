@@ -9,11 +9,9 @@ from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
 from math import sin, pi
 
-
 name = "twod-test"
 outdir = "result/%s" % name
 prepare(outdir)
-
 hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name), "w")
 hdf5.attrs["name"] = name 
 hdf5.require_group("timeline")

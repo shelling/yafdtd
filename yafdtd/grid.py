@@ -474,6 +474,48 @@ class DispersivePlane(PlaneDecorator):
         self.hzfield /= self.mu_r
         return self
 
+class PolarDPlane(object):
+    def __init__(self, shape, a=0, b=0, c=1, d=0, dt=1):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.dt = dt
+        self.mask= numpy.zeros(shape)
+        self.x   = numpy.zeros(shape)
+        self.y   = numpy.zeros(shape)
+        self.z   = numpy.zeros(shape)
+        self.xp  = numpy.zeros(shape)
+        self.yp  = numpy.zeros(shape)
+        self.zp  = numpy.zeros(shape)
+        self.xp2 = numpy.zeros(shape)
+        self.yp2 = numpy.zeros(shape)
+        self.zp2 = numpy.zeros(shape)
+        return None
+
+    def update(self, plane):
+        self.xp2 = self.xp
+        self.yp2 = self.yp
+        self.zp2 = self.zp
+        self.xp = self.x
+        self.yp = self.y
+        self.zp = self.z
+        self.x = self.c1*self.xp + self.c2*self.xp2 + self.c3*plane.exfield
+        self.y = self.c1*self.yp + self.c2*self.yp2 + self.c3*plane.eyfield
+        self.z = self.c1*self.zp + self.c2*self.zp2 + self.c3*plane.ezfield
+        self.x *= self.mask
+        self.y *= self.mask
+        self.z *= self.mask
+        return self
+
+    def set_factor(self):
+        denominator = 2*self.d + self.c*self.dt
+        self.c1 = (4*self.d - 2*self.b*(self.dt**2)) / denominator
+        self.c2 = (-2*self.d + self.c*self.dt) / denominator
+        self.c3 = (2*self.a*(self.dt**2)) / denominator
+        return None
+
+
 class Cube(object):
     """ Three dimension grid object """
     
