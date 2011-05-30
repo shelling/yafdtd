@@ -423,24 +423,24 @@ class YTFSFPlane(PlaneDecorator):
         return None
     def update_dtfsf(self):
         if self.xtfsf == [None, None]:
-            self.dzfield[:, self.ytfsf[0]]  += 0.5 * self.tminc.hfield[self.ytfsf[0]]
+            self.dzfield[:, self.ytfsf[0]]  += 0.5 * self.tminc.hfield[self.ytfsf[0]-1]
             self.dzfield[:, self.ytfsf[1]]  -= 0.5 * self.tminc.hfield[self.ytfsf[1]]
         else:
-            self.dzfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[0]]  += 0.5 * self.tminc.hfield[self.ytfsf[0]]
+            self.dzfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[0]]  += 0.5 * self.tminc.hfield[self.ytfsf[0]-1]
             self.dzfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[1]]  -= 0.5 * self.tminc.hfield[self.ytfsf[1]]
         return self
     def update_btfsf(self):
         if self.xtfsf == [None, None]:
             # y edge
-            self.bxfield[:, self.ytfsf[0]-1]+= 0.5 * self.tminc.dfield[self.ytfsf[0]]
-            self.bxfield[:, self.ytfsf[1]]  -= 0.5 * self.tminc.dfield[self.ytfsf[1]]
+            self.bxfield[:, self.ytfsf[0]-1]+= 0.5 * self.tminc.efield[self.ytfsf[0]]
+            self.bxfield[:, self.ytfsf[1]]  -= 0.5 * self.tminc.efield[self.ytfsf[1]]
         else:
             # y edge
-            self.bxfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[0]-1] += 0.5 * self.tminc.dfield[self.ytfsf[0]]
-            self.bxfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[1]]   -= 0.5 * self.tminc.dfield[self.ytfsf[1]]
+            self.bxfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[0]-1] += 0.5 * self.tminc.efield[self.ytfsf[0]]
+            self.bxfield[self.xtfsf[0]:self.xtfsf[1]+1, self.ytfsf[1]]   -= 0.5 * self.tminc.efield[self.ytfsf[1]]
             # x edge
-            self.byfield[self.xtfsf[0]-1, self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.tminc.dfield[self.ytfsf[0]:self.ytfsf[1]+1]
-            self.byfield[self.xtfsf[1],   self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.tminc.dfield[self.ytfsf[0]:self.ytfsf[1]+1]
+            self.byfield[self.xtfsf[0]-1, self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.tminc.efield[self.ytfsf[0]:self.ytfsf[1]+1]
+            self.byfield[self.xtfsf[1],   self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.tminc.efield[self.ytfsf[0]:self.ytfsf[1]+1]
         return self
 
 class DispersivePlane(PlaneDecorator):
