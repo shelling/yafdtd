@@ -10,7 +10,6 @@ Cube as 3-D grid
 import numpy
 
 from scipy.constants import epsilon_0, mu_0
-from yafdtd.source import HardSource, TFSF
 from yafdtd import utils
 
 
@@ -441,6 +440,34 @@ class YTFSFPlane(PlaneDecorator):
             # x edge
             self.byfield[self.xtfsf[0]-1, self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.tminc.efield[self.ytfsf[0]:self.ytfsf[1]+1]
             self.byfield[self.xtfsf[1],   self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.tminc.efield[self.ytfsf[0]:self.ytfsf[1]+1]
+        return self
+
+class XTFSFPlane(PlaneDecorator):
+    def __init__(self, orig):
+        super(XTFSFPlane, self).__init__(orig)
+        self.teinc = String(self.shape[0])
+        self.xtfsf = [10, self.shape[0]-10]
+        self.ytfsf = [10, self.shape[1]-10]
+        return None
+    def update_dtfsf(self):
+        if self.ytfsf == [None, None]:
+            self.dyfield[self.xtfsf[0],:] += 0.5 * self.teinc.hfield[self.xtfsf[0]-1]
+            self.dyfield[self.xtfsf[1],:] -= 0.5 * self.teinc.hfield[self.xtfsf[1]]
+        else:
+            # x edge
+            self.dyfield[self.xtfsf[0],self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.teinc.hfield[self.xtfsf[0]-1]
+            self.dyfield[self.xtfsf[1],self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.teinc.hfield[self.xtfsf[1]]
+            # y edge
+            self.dxfield[self.xtfsf[0]:self.xtfsf[1],self.ytfsf[0]] -= 0.5 * self.teinc.hfield[self.xtfsf[0]:self.xtfsf[1]]
+            self.dxfield[self.xtfsf[0]:self.xtfsf[1],self.ytfsf[1]+1] += 0.5 * self.teinc.hfield[self.xtfsf[0]:self.xtfsf[1]]
+        return self
+    def update_btfsf(self):
+        if self.ytfsf == [None, None]:
+            self.bzfield[self.xtfsf[0]-1,:] += 0.5 * self.teinc.efield[self.xtfsf[0]]
+            self.bzfield[self.xtfsf[1],:]   -= 0.5 * self.teinc.efield[self.xtfsf[1]]
+        else:
+            self.bzfield[self.xtfsf[0]-1,self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.teinc.efield[self.xtfsf[0]]
+            self.bzfield[self.xtfsf[1],  self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.teinc.efield[self.xtfsf[1]]
         return self
 
 class DispersivePlane(PlaneDecorator):
