@@ -10,7 +10,6 @@ from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
 from math import sin, pi
 
-
 name = "tmtfsf"
 outdir = "result/%s" % name
 prepare(outdir)
@@ -18,7 +17,7 @@ hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name), "w")
 hdf5.attrs["name"] = name 
 hdf5.require_group("timeline")
 
-length = 61
+length = 201
 deltax = 10**-9
 deltat = deltax/(2*c)
 freq   = 4*10**15
@@ -29,8 +28,8 @@ plane.pmlx = False
 plane.pml_thick = 5
 plane.set_pml()
 plane.tminc.enter = 2
-plane.xtfsf = [None, None]
-
+plane.xtfsf = [25,176]
+plane.ytfsf = [25,176]
 
 for t in range(0,600):
     plane.tminc.update(sin(2*pi*freq*t*deltat))
@@ -45,7 +44,6 @@ for t in range(0,600):
     
     hdf5.require_group("timeline/"+str(t))
     hdf5["timeline"][str(t)]["ez"] = plane.ezfield
-    plot(plane.ezfield[10,:], "/tmp/tmtfsf-%.3d.png", t)
     print t
 
 hdf5.close()
