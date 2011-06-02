@@ -4,7 +4,7 @@
 import sys, os, math, h5py, numpy
 sys.path.append(".")
 
-from yafdtd.grid import Plane, PBCPlane, UPMLPlane, XTFSFPlane
+from yafdtd.grid import Plane, PBCPlane, UPMLPlane, XTFSFPlane, DispersivePlane
 from yafdtd.grid import String
 from yafdtd.utils import *
 from scipy.constants import c, epsilon_0, mu_0
@@ -22,7 +22,7 @@ deltax = 10**-9
 deltat = deltax/(2*c)
 freq   = 6*10**15
 
-plane = XTFSFPlane(UPMLPlane(PBCPlane(Plane((length,length)))))
+plane = DispersivePlane(XTFSFPlane(UPMLPlane(PBCPlane(Plane((length,length))))))
 plane.pbcx = False
 plane.pbcy = False
 # plane.pmly = False
