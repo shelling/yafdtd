@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 
-import sys, numpy, h5py
+import sys, numpy, h5py, pylab
 sys.path.append(".")
 from numpy import abs
 from numpy.fft import fft, fftshift
-from yafdtd.utils import imshow
+from matplotlib import cm, _pylab_helpers, interactive
+from mpl_toolkits.mplot3d import Axes3D
+
 
 hdf5 = h5py.File(sys.argv[1], "r")
 
@@ -33,4 +35,9 @@ freqdomain = fftshift(abs(fft(timedomain, axis=0)), axes=(0,))/shape[0]
 #         print i
 
 for i in range(shape[0]):
-    imshow(freqdomain[i], "/tmp/phasor-%.3d", f[i], [0.0,1.0])
+    fig = pylab.figure()
+    im = fig.gca().imshow(freqdomain[i])
+    fig.colorbar(im)
+    fig.savefig("/tmp/phasor-%.3d" % f[i])
+    _pylab_helpers.Gcf.destroy_fig(fig)
+
