@@ -11,7 +11,7 @@ from scipy.constants import c, epsilon_0, mu_0
 from math import sin, pi
 from yafdtd.geometry import circle
 
-name = "silver-rod-25nm-xtfsf-te-dx1nm-500x500"
+name = "silver-rod-25nm-xtfsf-te-dx5angstrom"
 outdir = "result/%s" % name
 prepare(outdir)
 hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name), "w")
