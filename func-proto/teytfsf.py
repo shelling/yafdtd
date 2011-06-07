@@ -27,9 +27,6 @@ plane.pbcy = False
 plane.pmlx = False
 plane.pml_thick = 5
 plane.set_pml()
-# plane.tminc.enter = 2
-# plane.xtfsf = [None, None]
-# plane.ytfsf = [10,length-10]
 
 teinc = String(length)
 teinc.enter = 2
@@ -39,19 +36,19 @@ for t in range(0,600):
 
     plane.update_hpbc()
     plane.update_dfield()
-    plane.dzfield[:,10] += 0.5 * teinc.hfield[9]
-    plane.dzfield[:,51] -= 0.5 * teinc.hfield[51]
+    plane.dxfield[:,10] -= 0.5 * teinc.hfield[9]
+    plane.dxfield[:,51] += 0.5 * teinc.hfield[51]
     plane.update_efield()
 
     plane.update_epbc()
     plane.update_bfield()
-    plane.bxfield[:,9]  += 0.5 * teinc.efield[10]
-    plane.bxfield[:,51] -= 0.5 * teinc.efield[51]
+    plane.bzfield[:,9]  += 0.5 * teinc.efield[10]
+    plane.bzfield[:,51] -= 0.5 * teinc.efield[51]
     plane.update_hfield()
     
     hdf5.require_group("timeline/"+str(t))
-    hdf5["timeline"][str(t)]["ez"] = plane.ezfield
-    plot(plane.ezfield[31], "/tmp/ez%.3d.png", t)
+    hdf5["timeline"][str(t)]["ez"] = plane.hzfield
+    plot(plane.hzfield[31], "/tmp/ez%.3d.png", t)
     print t
 
 hdf5.close()
