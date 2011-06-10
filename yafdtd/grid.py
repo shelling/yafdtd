@@ -485,8 +485,12 @@ class XTFSFPlane(PlaneDecorator):
 class DispersivePlane(PlaneDecorator):
     def __init__(self, orig):
         super(DispersivePlane, self).__init__(orig)
-        self.epsilon_r = numpy.ones(self.shape)
-        self.mu_r      = numpy.ones(self.shape)
+        self.epsilon_rx = numpy.ones(self.shape)
+        self.epsilon_ry = numpy.ones(self.shape)
+        self.epsilon_rz = numpy.ones(self.shape)
+        self.mu_rx      = numpy.ones(self.shape)
+        self.mu_ry      = numpy.ones(self.shape)
+        self.mu_rz      = numpy.ones(self.shape)
         return None
     def update_efield(self, *polar):
         self.exfield  = self.dxfield.copy()
@@ -496,9 +500,9 @@ class DispersivePlane(PlaneDecorator):
             self.exfield -= p.x
             self.eyfield -= p.y
             self.ezfield -= p.z
-        self.exfield /= self.epsilon_r
-        self.eyfield /= self.epsilon_r
-        self.ezfield /= self.epsilon_r
+        self.exfield /= self.epsilon_rx
+        self.eyfield /= self.epsilon_ry
+        self.ezfield /= self.epsilon_rz
         return self
     def update_hfield(self, *polar):
         self.hxfield  = self.bxfield.copy()
@@ -508,9 +512,9 @@ class DispersivePlane(PlaneDecorator):
             self.hxfield -= p.x # should verify + or -
             self.hyfield -= p.y
             self.hzfield -= p.z
-        self.hxfield /= self.mu_r
-        self.hyfield /= self.mu_r
-        self.hzfield /= self.mu_r
+        self.hxfield /= self.mu_rx
+        self.hyfield /= self.mu_ry
+        self.hzfield /= self.mu_rz
         return self
 
 class PolarDPlane(object):
@@ -520,7 +524,9 @@ class PolarDPlane(object):
         self.c = c
         self.d = d
         self.dt = dt
-        self.mask= numpy.zeros(shape)
+        self.maskx=numpy.zeros(shape)
+        self.masky=numpy.zeros(shape)
+        self.maskz=numpy.zeros(shape)
         self.x   = numpy.zeros(shape)
         self.y   = numpy.zeros(shape)
         self.z   = numpy.zeros(shape)
@@ -539,12 +545,9 @@ class PolarDPlane(object):
         self.xp = self.x
         self.yp = self.y
         self.zp = self.z
-        self.x = self.c1*self.xp + self.c2*self.xp2 + self.c3*plane.exfield
-        self.y = self.c1*self.yp + self.c2*self.yp2 + self.c3*plane.eyfield
-        self.z = self.c1*self.zp + self.c2*self.zp2 + self.c3*plane.ezfield
-        self.x *= self.mask
-        self.y *= self.mask
-        self.z *= self.mask
+        self.x = self.c1*self.xp + self.c2*self.xp2 + self.c3*plane.exfield*self.maskx
+        self.y = self.c1*self.yp + self.c2*self.yp2 + self.c3*plane.eyfield*self.masky
+        self.z = self.c1*self.zp + self.c2*self.zp2 + self.c3*plane.ezfield*self.maskz
         return self
 
     def set_factor(self):
