@@ -7,7 +7,7 @@ Plane as 2-D grid
 Cube as 3-D grid
 
 """
-import numpy
+import numpy, h5py
 
 from scipy.constants import epsilon_0, mu_0
 from yafdtd import utils
@@ -118,11 +118,12 @@ class Plane(object):
     The rest, related to BPML or UPML, are appended in helper functions
     """
 
-    def __init__(self, shape):
+    def __init__(self, name, shape):
         """
         Arguments:
         - `shape`: specify plance shape
         """
+        self.name = name
 
         self.shape = shape
         
@@ -262,6 +263,54 @@ class Plane(object):
             res[0,j] = self.hyfield[0,j] - self.hyedgex[j] - self.hxfield[0,j] + self.hxfield[0,j-1]
         res[0,0] = self.hyfield[0,0] - self.hyedgex[0] - self.hxfield[0,0] + self.hxedgey[0]
         return res
+
+    def imshow_ex(self, name):
+        utils.imshow(self.exfield, name)
+        return self
+
+    def imshow_ey(self, name):
+        utils.imshow(self.eyfield, name)
+        return self
+
+    def imshow_ez(self, name):
+        utils.imshow(self.ezfield, name)
+        return self
+
+    def imshow_hx(self, name):
+        utils.imshow(self.hxfield, name)
+        return self
+
+    def imshow_hy(self, name):
+        utils.imshow(self.hyfield, name)
+        return self
+
+    def imshow_hz(self, name):
+        utils.imshow(self.hzfield, name)
+        return self
+
+    def open(self, filename=None):
+        if filename == None:
+            filename = "%s.hdf5" % self.name
+        self.hdf5 = h5py.File(filename, "w")
+        self.hdf5.require_group("timeline")
+        return self
+
+    def save(self):
+        self.hdf5.require_group("timeline/%d" % self.t)
+        self.hdf5["timeline/%d/ex" % self.t] = self.exfield
+        self.hdf5["timeline/%d/ey" % self.t] = self.eyfield
+        self.hdf5["timeline/%d/ez" % self.t] = self.ezfield
+        self.hdf5["timeline/%d/hx" % self.t] = self.hxfield
+        self.hdf5["timeline/%d/hy" % self.t] = self.hyfield
+        self.hdf5["timeline/%d/hz" % self.t] = self.hzfield
+        return self
+
+    def save_attrs(self):
+        self.hdf5.attrs["name"] = self.name
+        self.hdf5.attrs["freq"] = self.freq
+        self.hdf5.attrs["deltax"] = self.deltax
+        self.hdf5.attrs["deltat"] = self.deltat
+        return self
 
     def inspect(self):
         result = ""
