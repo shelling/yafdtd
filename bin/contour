@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+#-*- mode: python -*-
+
+import sys
+sys.path.append(".")
+
+from yafdtd import convention
+from os.path import dirname, basename
+from enthought.mayavi.mlab import quiver3d, contour3d, show, savefig, clf
+
+# contour3d = show(contour3d)
+
+hdf5 = h5py.File("result/threed-test/threed-test.hdf5")
+data = numpy.array(hdf5["/timeline/50/ez"])
+contour3d(data)
+savefig("/tmp/a.png")
+clf()
+
+
+
+

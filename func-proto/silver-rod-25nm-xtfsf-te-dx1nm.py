@@ -5,43 +5,42 @@ import sys, os, math, h5py, numpy
 sys.path.append(".")
 
 from yafdtd.grid import Plane, PBCPlane, UPMLPlane, XTFSFPlane, DispersivePlane, PolarDPlane
-from yafdtd.grid import String
 from yafdtd.utils import *
-from scipy.constants import c, epsilon_0, mu_0
+from scipy.constants import c
 from math import sin, pi
 from yafdtd.geometry import circle
 
-name = "silver-rod-25nm-xtfsf-te-dx1nm"
-outdir = "result/%s" % name
-prepare(outdir)
-hdf5 = h5py.File("%s/%s.hdf5" % (outdir, name), "w")
-hdf5.attrs["name"] = name 
-hdf5.require_group("timeline")
-
 length = 301
-deltax = 10**-9
-deltat = deltax/(2*c)
-freq   = 8.63*10**14
 
-hdf5.attrs["freq"] = freq
-hdf5.attrs["deltat"] = deltat
-
-plane = DispersivePlane(XTFSFPlane(UPMLPlane(PBCPlane(Plane((length,length))))))
-plane.pbcx = False
-plane.pbcy = False
-# plane.pmly = False
-plane.pml_thick = 13
-plane.set_pml()
+plane = DispersivePlane(XTFSFPlane(UPMLPlane(PBCPlane(Plane("silver-rod-25nm-xtfsf-te-dx1nm", (length,length))))))
+plane.open("result/%s/%s.hdf5" % (plane.name, plane.name))
+# plane.deltax = 10**-9
+# plane.deltat = plane.deltax/(2*c)
+# plane.frequency = 7.88927*10**14
+# plane.wavelength = c/plane.frequency
+plane.wavelength(347.5*10**-9).dx(10**-9).save_attrs()
+plane.pbc(x = False, y = False).pml(thick = 13).set_pml()
 plane.teinc.enter = 2
-plane.ytfsf = [25,length-25]
-plane.xtfsf = [25,length-25]
+plane.ytfsf = [50,length-50]
+plane.xtfsf = [50,length-50]
+circle(plane.epsilon_rx, [151,151.5], 25, 8.926)
+circle(plane.epsilon_ry, [151.5,151], 25, 8.926)
+circle(plane.epsilon_rz, [151,151],   25, 8.926)
 
-metal = PolarDPlane(plane.shape, a=(9.39*10**15)**2, b=0, c=3.14*10**13, d=1, dt=deltat)
+# metal = PolarDPlane(plane.shape, a=(9.39*10**15)**2, b=0, c=3.14*10**13, d=1, dt=plane.attrs["dt"])
+metal = PolarDPlane(plane.shape, a=(1.757*10**16)**2, b=0, c=3.0786*10**14, d=1, dt=plane.attrs["dt"])
 metal.set_factor()
-circle(metal.mask, [151,151], 25, 1)
+circle(metal.maskx, [151,151.5], 25, 1)
+circle(metal.masky, [151.5,151], 25, 1)
+circle(metal.maskz, [151,151],   25, 1)
 
-for t in range(0,2000):
-    plane.teinc.update(sin(2*pi*freq*t*deltat))
+prepare("result/%s/ex" % plane.name)
+prepare("result/%s/ey" % plane.name)
+prepare("result/%s/hz" % plane.name)
+
+for t in range(0,4500):
+    plane.t = t
+    plane.teinc.update(sin(2*pi*plane.attrs["frequency"]*t*plane.attrs["dt"]))
 
     plane.update_hpbc()
     plane.update_dfield().update_dtfsf()
@@ -52,8 +51,10 @@ for t in range(0,2000):
     plane.update_bfield().update_btfsf()
     plane.update_hfield()
 
-    hdf5.require_group("timeline/"+str(t))
-    hdf5["timeline"][str(t)]["ez"] = plane.hzfield
+    plane.save()
+    plane.imshow_ex("result/%s/ex/%.4d.png" % (plane.name, t))
+    plane.imshow_ey("result/%s/ey/%.4d.png" % (plane.name, t))
+    plane.imshow_hz("result/%s/hz/%.4d.png" % (plane.name, t))
     print t
 
-hdf5.close()
+plane.close()

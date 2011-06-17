@@ -9,7 +9,7 @@ Cube as 3-D grid
 """
 import numpy, h5py
 
-from scipy.constants import epsilon_0, mu_0
+from scipy.constants import c
 from yafdtd import utils
 
 
@@ -126,6 +126,8 @@ class Plane(object):
         self.name = name
 
         self.shape = shape
+
+        self.attrs = {}
         
         self.dxfield = numpy.zeros(shape)
         self.dyfield = numpy.zeros(shape)
@@ -295,6 +297,10 @@ class Plane(object):
         self.hdf5.require_group("timeline")
         return self
 
+    def close(self):
+        self.hdf5.close()
+        return self
+
     def save(self):
         self.hdf5.require_group("timeline/%d" % self.t)
         self.hdf5["timeline/%d/ex" % self.t] = self.exfield
@@ -307,9 +313,23 @@ class Plane(object):
 
     def save_attrs(self):
         self.hdf5.attrs["name"] = self.name
-        self.hdf5.attrs["freq"] = self.freq
-        self.hdf5.attrs["deltax"] = self.deltax
-        self.hdf5.attrs["deltat"] = self.deltat
+        for (key, value) in self.attrs.items():
+            self.hdf5.attrs[key] = value
+        return self
+
+    def dx(self, dx):
+        self.attrs["dx"] = dx
+        self.attrs["dt"] = dx/(2*c)
+        return self
+
+    def frequency(self, frequency):
+        self.attrs["frequency"]  = frequency
+        self.attrs["wavelength"] = c/frequency
+        return self
+
+    def wavelength(self, wavelength):
+        self.attrs["wavelength"] = wavelength
+        self.attrs["frequency"]  = c/wavelength
         return self
 
     def inspect(self):
@@ -344,6 +364,11 @@ class PBCPlane(PlaneDecorator):
         self.pbcx = True
         self.pbcy = True
         return None
+
+    def pbc(self, x=True, y=True):
+        self.pbcx = x
+        self.pbcy = y
+        return self
 
     def update_epbc(self, ezedgex=None, eyedgex=None, ezedgey=None, exedgey=None):
         """
@@ -412,6 +437,12 @@ class UPMLPlane(PlaneDecorator):
         self.j3 = numpy.ones(self.shape)
 
         return None
+
+    def pml(self, x=True, y=True, thick=5):
+        self.pmlx = x
+        self.pmly = y
+        self.pml_thick = thick
+        return self
 
     def update_dfield(self):
         """

@@ -1,31 +1,36 @@
 #!/usr/bin/env python
 #-*- mode: python -*-
 
-import sys, numpy, h5py, pylab
+import sys, numpy, h5py, pylab, matplotlib
 sys.path.append(".")
 from numpy import abs
 from numpy.fft import fft, fftshift
 from matplotlib import cm, _pylab_helpers, interactive
 from mpl_toolkits.mplot3d import Axes3D
+from os.path import dirname
 
 
 hdf5 = h5py.File(sys.argv[1], "r")
 
-freq = hdf5.attrs["freq"]; print freq
-deltat = hdf5.attrs["deltat"]; print deltat
-print 1.0/(freq*deltat)
+for (key, value) in hdf5.attrs.items():
+    print key, "=>", value
+
+freq = hdf5.attrs["frequency"]
+deltat = hdf5.attrs["dt"]
+print "need records: ", 1.0/(freq*deltat)
 periodForPhasor = 1
 
 shape = [int(periodForPhasor/(freq*deltat))]
-shape.extend(hdf5["/timeline/1/ez"].shape); print shape
+shape.extend(hdf5["/timeline/1/%s" % sys.argv[2]].shape)
 
 start = len(hdf5["timeline"]) - shape[0]
+start = 2500 - shape[0]
 t = numpy.arange(start,start+shape[0])
-f = numpy.arange(-shape[0]/2,shape[0]/2)/(deltat*shape[0]); print f
+f = numpy.arange(-shape[0]/2,shape[0]/2)/(deltat*shape[0])
 
 timedomain = numpy.zeros(shape)
 for i in range(shape[0]):
-    timedomain[i] = hdf5["timeline"][str(start+i)]["ez"]
+    timedomain[i] = hdf5["timeline"][str(start+i)][sys.argv[2]]
 
 freqdomain = fftshift(abs(fft(timedomain, axis=0)), axes=(0,))/shape[0]
 
@@ -35,9 +40,10 @@ freqdomain = fftshift(abs(fft(timedomain, axis=0)), axes=(0,))/shape[0]
 #         print i
 
 for i in range(shape[0]):
-    fig = pylab.figure()
-    im = fig.gca().imshow(freqdomain[i])
-    fig.colorbar(im)
-    fig.savefig("/tmp/phasor-%.3d" % f[i])
-    _pylab_helpers.Gcf.destroy_fig(fig)
+    if numpy.round(f[i]/freq) == 1.0:
+        fig = pylab.figure()
+        im = fig.gca().imshow(freqdomain[i][50:251,50:251], norm=matplotlib.colors.Normalize(0.45, 0.9, True))
+        fig.colorbar(im)
+        fig.savefig("%s/phasor-%s.png" %(dirname(sys.argv[1]), f[i]))
+        _pylab_helpers.Gcf.destroy_fig(fig)
 

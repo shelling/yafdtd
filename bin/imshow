@@ -15,7 +15,7 @@ prepare(outdir)
 
 pattern = "%s/%s-%%.%dd.png" % (outdir, hdf5.attrs["name"], order(hdf5["timeline"]))
 
-processes = [Process(target=imshow, args=(t.get("ez"), pattern, int(basename(t.name)))) for t in hdf5["timeline"].values()]
+processes = [Process(target=imshow, args=(t.get(sys.argv[2]), pattern % int(basename(t.name)))) for t in hdf5["timeline"].values()]
 
 batch(processes, 60)
 
