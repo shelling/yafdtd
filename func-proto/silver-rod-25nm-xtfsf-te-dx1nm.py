@@ -14,10 +14,6 @@ length = 301
 
 plane = DispersivePlane(XTFSFPlane(UPMLPlane(PBCPlane(Plane("silver-rod-25nm-xtfsf-te-dx1nm", (length,length))))))
 plane.open("result/%s/%s.hdf5" % (plane.name, plane.name))
-# plane.deltax = 10**-9
-# plane.deltat = plane.deltax/(2*c)
-# plane.frequency = 7.88927*10**14
-# plane.wavelength = c/plane.frequency
 plane.wavelength(347.5*10**-9).dx(10**-9).save_attrs()
 plane.pbc(x = False, y = False).pml(thick = 13).set_pml()
 plane.teinc.enter = 2
