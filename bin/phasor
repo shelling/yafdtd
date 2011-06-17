@@ -9,8 +9,10 @@ from matplotlib import cm, _pylab_helpers, interactive
 from mpl_toolkits.mplot3d import Axes3D
 from os.path import dirname
 
+filename  = sys.argv[1]
+fieldname = sys.argv[2]
 
-hdf5 = h5py.File(sys.argv[1], "r")
+hdf5 = h5py.File(filename, "r")
 
 for (key, value) in hdf5.attrs.items():
     print key, "=>", value
@@ -19,31 +21,28 @@ freq = hdf5.attrs["frequency"]
 deltat = hdf5.attrs["dt"]
 print "need records: ", 1.0/(freq*deltat)
 periodForPhasor = 1
+print "used records: ", periodForPhasor/(freq*deltat)
 
 shape = [int(periodForPhasor/(freq*deltat))]
-shape.extend(hdf5["/timeline/1/%s" % sys.argv[2]].shape)
+shape.extend(hdf5["/timeline/1/%s" % fieldname].shape)
 
 start = len(hdf5["timeline"]) - shape[0]
-start = 2500 - shape[0]
 t = numpy.arange(start,start+shape[0])
 f = numpy.arange(-shape[0]/2,shape[0]/2)/(deltat*shape[0])
 
 timedomain = numpy.zeros(shape)
 for i in range(shape[0]):
-    timedomain[i] = hdf5["timeline"][str(start+i)][sys.argv[2]]
+    timedomain[i] = hdf5["timeline"][str(start+i)][fieldname]
 
 freqdomain = fftshift(abs(fft(timedomain, axis=0)), axes=(0,))/shape[0]
 
-# for i in range(len(f)):
-#     if abs(f[i]) == freq:
-#         imshow(freqdomain[i], "/tmp/phasor-%.3d", i)
-#         print i
-
 for i in range(shape[0]):
-    if numpy.round(f[i]/freq) == 1.0:
+    freqtarget = numpy.round(f[i]/freq)
+    if freqtarget > 0.9 and freqtarget < 1.1:
         fig = pylab.figure()
-        im = fig.gca().imshow(freqdomain[i][50:251,50:251], norm=matplotlib.colors.Normalize(0.45, 0.9, True))
+        norm=matplotlib.colors.Normalize(0.38, 0.9, True)
+        im = fig.gca().imshow(freqdomain[i][50:251,50:251])
         fig.colorbar(im)
-        fig.savefig("%s/phasor-%s.png" %(dirname(sys.argv[1]), f[i]))
+        fig.savefig("%s/phasor-%s.png" %(dirname(filename), f[i]))
         _pylab_helpers.Gcf.destroy_fig(fig)
 
