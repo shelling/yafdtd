@@ -4,11 +4,30 @@ import os, sys, numpy, pylab
 
 sys.path.append(".")
 
-from yafdtd.grid import Plane, PBCPlane, UPMLPlane, XTFSFPlane, DispersivePlane, PolarDPlane
+from yafdtd.grid import Plane, PBCPlane, UPMLPlane, XTFSFPlane, DispersivePlane, PolarDPlane, PlaneDecorator
 from yafdtd.utils import *
 from scipy.constants import c
 from math import sin, pi
 from yafdtd.geometry import circle
+
+class MPIEdgePlane(PlaneDecorator):
+    def __init__(self, orig):
+        super(MPIEdgePlane, self).__init__(orig)
+        return None
+
+    def send_hpbc(self):
+        self.mpi_comm.send(self.hyfield[self.shape[0]-1], dest=self.mpi_next, tag=0)
+        return self
+
+    def recv_hpbc(self):
+        return self
+
+    def send_epbc(self):
+        self.mpi_comm.send(self.ezfield[0], dest=self.mpi_prev, tag=1)
+        return self
+
+    def recv_hpbc(self):
+        return self
 
 
 comm = MPI.COMM_WORLD
@@ -28,42 +47,37 @@ deltat = deltax/(2*c)
 freq   = 4*10**15
 
 
-plane = UPMLPlane(PBCPlane(Plane("mpi2d", (300, 900))))
+plane = MPIEdgePlane(UPMLPlane(PBCPlane(Plane("mpi2d", (30, 90)))))
 plane.pbc(x = False, y = True)
+plane.mpi_comm = comm
+plane.mpi_size = size
+plane.mpi_rank = rank
+plane.mpi_prev = rank-1
+plane.mpi_next = rank+1
+
+if rank == size-1:
+    plane.mpi_next = 0
+if rank == 0:
+    plane.mpi_prev = size-1
 
 if rank == 0:
-    finalplane = Plane("final", (900,900))
+    finalplane = Plane("final", (90,90))
 
 
 for t in range(300):
-
-    if rank < size-1:
-        comm.send(plane.hyfield[299], dest=rank+1, tag=0)
-    if rank > 0:
-        hedge = comm.recv(source=rank-1, tag=0)
-    if rank == size-1:
-        comm.send(plane.hyfield[299], dest=0, tag=0)
-    if rank == 0:
-        hedge = comm.recv(source=size-1, tag=0)
-
-    plane.update_hpbc(hyedgex=hedge)
+    plane.send_hpbc()
+    plane.hyedgex = comm.recv(source=plane.mpi_prev, tag=0)
+    plane.update_hpbc()
     plane.update_dfield()
     plane.update_efield()
 
     if rank == 0:
         print t
-        plane.ezfield[15,15] = sin(2*pi*freq*t*deltat)
+        plane.ezfield[10,10] = sin(2*pi*freq*t*deltat)
 
-    if rank > 0:
-        comm.send(plane.ezfield[0], dest=rank-1, tag=1)
-    if rank < size-1:
-        eedge = comm.recv(source=rank+1, tag=1)
-    if rank == 0:
-        comm.send(plane.ezfield[0], dest=size-1, tag=1)
-    if rank == size-1:
-        eedge = comm.recv(source=0, tag=1)
- 
-    plane.update_epbc(ezedgex=eedge)
+    plane.send_epbc()
+    plane.ezedgex = comm.recv(source=plane.mpi_next, tag=1)
+    plane.update_epbc()
     plane.update_bfield()
     plane.update_hfield()
 
@@ -71,4 +85,4 @@ for t in range(300):
     ez = comm.gather(plane.ezfield, root=0)
     if rank == 0:
         finalplane.ezfield = numpy.concatenate(ez)
-        # finalplane.imshow_ez("/tmp/%.3d.png"%t)
+        finalplane.imshow_ez("/tmp/%.3d.png"%t)
