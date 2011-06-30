@@ -10,9 +10,9 @@ from scipy.constants import c
 from math import sin, pi
 from yafdtd.geometry import circle
 
-class MPIEdgePlane(PlaneDecorator):
+class MPIXEdgePlane(PlaneDecorator):
     def __init__(self, orig):
-        super(MPIEdgePlane, self).__init__(orig)
+        super(MPIXEdgePlane, self).__init__(orig)
         return None
 
     def send_hpbc(self):
@@ -47,7 +47,7 @@ deltat = deltax/(2*c)
 freq   = 4*10**15
 
 
-plane = MPIEdgePlane(UPMLPlane(PBCPlane(Plane("mpi2d", (30, 90)))))
+plane = MPIXEdgePlane(UPMLPlane(PBCPlane(Plane("mpi2d", (30, 90)))))
 plane.pbc(x = False, y = True)
 plane.mpi_comm = comm
 plane.mpi_size = size
@@ -64,20 +64,18 @@ if rank == 0:
     finalplane = Plane("final", (90,90))
 
 
-for t in range(300):
+for t in range(100):
     plane.send_hpbc()
-    plane.hyedgex = comm.recv(source=plane.mpi_prev, tag=0)
-    plane.update_hpbc()
+    plane.update_hpbc(hyedgex=plane.mpi_comm.recv(source=plane.mpi_prev, tag=0))
     plane.update_dfield()
     plane.update_efield()
 
     if rank == 0:
         print t
-        plane.ezfield[10,10] = sin(2*pi*freq*t*deltat)
+        plane.ezfield[5,5] = sin(2*pi*freq*t*deltat)
 
     plane.send_epbc()
-    plane.ezedgex = comm.recv(source=plane.mpi_next, tag=1)
-    plane.update_epbc()
+    plane.update_epbc(ezedgex=plane.mpi_comm.recv(source=plane.mpi_next, tag=1))
     plane.update_bfield()
     plane.update_hfield()
 
