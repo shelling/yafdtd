@@ -19,16 +19,12 @@ plane.pbc(x = False, y = False).pml(thick = 13).set_pml()
 plane.teinc.enter = 2
 plane.ytfsf = [50,length-50]
 plane.xtfsf = [50,length-50]
-circle(plane.epsilon_rx, [151,151.5], 25, 8.926)
-circle(plane.epsilon_ry, [151.5,151], 25, 8.926)
-circle(plane.epsilon_rz, [151,151],   25, 8.926)
+plane.circle_e([151,151], 25, 8.926)
 
 # metal = PolarDPlane(plane.shape, a=(9.39*10**15)**2, b=0, c=3.14*10**13, d=1, dt=plane.attrs["dt"])
 metal = PolarDPlane(plane.shape, a=(1.757*10**16)**2, b=0, c=3.0786*10**14, d=1, dt=plane.attrs["dt"])
 metal.set_factor()
-circle(metal.maskx, [151,151.5], 25, 1)
-circle(metal.masky, [151.5,151], 25, 1)
-circle(metal.maskz, [151,151],   25, 1)
+metal.circle([151,151], 25, 1)
 
 prepare("result/%s/ex" % plane.name)
 prepare("result/%s/ey" % plane.name)
