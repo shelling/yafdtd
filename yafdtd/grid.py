@@ -11,6 +11,7 @@ import numpy, h5py
 
 from scipy.constants import c
 from yafdtd import utils
+from yafdtd.geometry import circle
 
 
 class String(object):
@@ -596,6 +597,23 @@ class DispersivePlane(PlaneDecorator):
         self.hyfield /= self.mu_ry
         self.hzfield /= self.mu_rz
         return self
+    def circle_e(self, center, r, value):
+        centerx = [None,None]
+        centerx[0] = center[0]-0.5
+        centerx[1] = center[1]
+
+        centery = [None,None]
+        centery[0] = center[0]
+        centery[1] = center[1]-0.5
+
+        circle(self.epsilon_rx, centerx, r, value)
+        circle(self.epsilon_ry, centery, r, value)
+        circle(self.epsilon_rz, center,  r, value)
+        return self
+
+    def circle_m(self, center, r, value):
+        # not yet implement
+        return self
 
 class PolarDPlane(object):
     def __init__(self, shape, a=0, b=0, c=1, d=0, dt=1):
@@ -635,7 +653,21 @@ class PolarDPlane(object):
         self.c1 = (4*self.d - 2*self.b*(self.dt**2)) / denominator
         self.c2 = (-2*self.d + self.c*self.dt) / denominator
         self.c3 = (2*self.a*(self.dt**2)) / denominator
-        return None
+        return self
+
+    def circle(self, center, r, value):
+        centerx = [None,None]
+        centerx[0] = center[0]-0.5
+        centerx[1] = center[1]
+
+        centery = [None,None]
+        centery[0] = center[0]
+        centery[1] = center[1]-0.5
+
+        circle(self.maskx, centerx, r, value)
+        circle(self.masky, centery, r, value)
+        circle(self.maskz, center,  r, value)
+        return self
 
 
 class Cube(object):
