@@ -2,10 +2,11 @@
 
 import sys, numpy, scipy, matplotlib, pylab
 sys.path.append(".")
-from yafdtd.source import gaussian_oft
+from yafdtd.source import gaussian
 from yafdtd.utils  import fft
+from math import pi, sin, cos
 
-DEBUG = 1
+DEBUG = 0
 
 n = numpy.float(2**10)
 freq = 25
@@ -35,7 +36,7 @@ n = numpy.float(2**18)
 dt = 1./1024
 
 t = numpy.arange(n)*dt
-timedomain = [gaussian_oft(i, 100, 1) for i in t]
+timedomain = [cos(2*pi*5*i)*gaussian(i, 100, 0.25) for i in t]
 
 f, freqdomain = fft(t, timedomain, dt)
 
@@ -49,7 +50,7 @@ pylab.xlim(99, 101)
 
 pylab.subplot(2,2,4)
 pylab.plot(f,freqdomain)
-pylab.xlim(-2,2)
+pylab.xlim(-10,10)
 
 pylab.savefig("/tmp/a.png")
 
