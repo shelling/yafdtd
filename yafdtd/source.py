@@ -6,66 +6,14 @@
 #   polynomial                     (not yet)
 
 import math
-import yafdtd
-import numpy
 
-
-# polynomial source and its 1-order and 2-order derivative
-def polynomial_pulse(t):
-    if abs(t)<1:
-        return mpf(mpf(1)-mpf(t)**2)**4
-    else:
-        return 0
-
-def polynomial_pulse_p(t):
-    if abs(t)<1:
-        return -8 * mpf(t) * (1-mpf(t)**2)**3
-    else:
-        return 0
-
-def polynomial_pulse_pp(t):
-    if abs(t)<1:
-        return 48 * mpf(t)**2 * (1-mpf(t)**2)**2 - 8 * (1-mpf(t)**2)**3
-    else:
-        return 0
-
-# guassian source and its 1-order derivative
-def gaussian(t, sigma, mean):
-    if type(t) == type(1):
-        return exp(-1 * (t - mean)**2 / (2 * sigma**2)) / (sqrt(2 * pi) * sigma)
-    elif type(t) == numpy.ndarray:
-        res = t.copy()
-        for i in range(0,len(res)):
-            res[i] = exp(-1 * (res[i] - mean)**2 / (2 * sigma**2)) / (sqrt(2 * pi) * sigma)
-        return res
-    
+def gaussian(t, center, width):
+    return math.exp( -0.5 * math.pow((float(center) - t)/width, 2.0) )
 
 def gaussian_p(t, sigma, mean):
     return ( (mean - t) / sqrt(2 * pi) * sigma**3 ) * exp( -1 * (t - mean)**2 / (2*sigma**2) )
 
 
-def gaussian_oft(t, center, width):
-    """
-    Gaussian Pulse generater
-    
-    Arguments:
-    - `center`: the center
-    - `width`:
-    """
-    return math.exp( -0.5 * math.pow((float(center) - t)/width, 2.0) )
 
-
-# triangular source
-def sin_oft(t, f=1):
-    """
-    sine of t
-    The default period (f=1) is 180 time steps to go through 2 PI.
-    Setting frequency to modify the period.
-    
-    Arguments:
-    - `t`: require
-    - `f`: default is 1
-    """
-    return math.sin(2.0*math.pi*f*t)
 
 
