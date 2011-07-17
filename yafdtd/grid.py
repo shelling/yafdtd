@@ -542,6 +542,13 @@ class XTFSFPlane(PlaneDecorator):
         self.xtfsf = [10, self.shape[0]-10]
         self.ytfsf = [10, self.shape[1]-10]
         return None
+    def tfsf(self, xtfsf=None, ytfsf=None, enter = 2):
+        self.teinc.enter = enter
+        if xtfsf:
+            self.xtfsf = xtfsf
+        if ytfsf:
+            self.ytfsf = ytfsf
+        return self
     def update_dtfsf(self):
         if self.ytfsf == [None, None]:
             self.dyfield[self.xtfsf[0],:] += 0.5 * self.teinc.hfield[self.xtfsf[0]-1]
