@@ -11,7 +11,8 @@ import numpy, h5py
 
 from scipy.constants import c
 from yafdtd import utils
-from yafdtd.geometry import circle
+from yafdtd.geometry import circle, rectangle
+from yafdtd.geometry import twodim
 
 
 class String(object):
@@ -99,6 +100,14 @@ class String(object):
         self.update_abc()
         self.update_bfield()
         self.update_hfield()
+        return self
+
+    def plot_e(self, name):
+        utils.plot(self.efield, name)
+        return self
+
+    def plot_h():
+        utils.plot(self,hfield, name)
         return self
 
     def inspect(self):
@@ -440,9 +449,11 @@ class UPMLPlane(PlaneDecorator):
         return None
 
     def pml(self, x=True, y=True, thick=5):
+        self.reset_pml()
         self.pmlx = x
         self.pmly = y
         self.pml_thick = thick
+        self.set_pml()
         return self
 
     def update_dfield(self):
@@ -605,20 +616,22 @@ class DispersivePlane(PlaneDecorator):
         self.hzfield /= self.mu_rz
         return self
     def circle_e(self, center, r, value):
-        centerx = [None,None]
-        centerx[0] = center[0]-0.5
-        centerx[1] = center[1]
-
-        centery = [None,None]
-        centery[0] = center[0]
-        centery[1] = center[1]-0.5
-
-        circle(self.epsilon_rx, centerx, r, value)
-        circle(self.epsilon_ry, centery, r, value)
-        circle(self.epsilon_rz, center,  r, value)
+        circle(self.epsilon_rx, twodim.center_ex(center), r, value)
+        circle(self.epsilon_ry, twodim.center_ey(center), r, value)
+        circle(self.epsilon_rz, twodim.center_ez(center), r, value)
         return self
 
     def circle_m(self, center, r, value):
+        # not yet implement
+        return self
+
+    def rectangle_e(self, center, xlen, ylen, value):
+        rectangle(self.epsilon_rx, twodim.center_ex(center), xlen, ylen, value)
+        rectangle(self.epsilon_ry, twodim.center_ey(center), xlen, ylen, value)
+        rectangle(self.epsilon_rz, twodim.center_ez(center), xlen, ylen, value)
+        return self
+
+    def rectangle_m(self, center, xlen, ylen, value):
         # not yet implement
         return self
 
@@ -662,18 +675,16 @@ class PolarDPlane(object):
         self.c3 = (2*self.a*(self.dt**2)) / denominator
         return self
 
-    def circle(self, center, r, value):
-        centerx = [None,None]
-        centerx[0] = center[0]-0.5
-        centerx[1] = center[1]
+    def circle(self, center, r):
+        circle(self.maskx, twodim.center_ex(center), r, 1)
+        circle(self.masky, twodim.center_ey(center), r, 1)
+        circle(self.maskz, twodim.center_ez(center), r, 1)
+        return self
 
-        centery = [None,None]
-        centery[0] = center[0]
-        centery[1] = center[1]-0.5
-
-        circle(self.maskx, centerx, r, value)
-        circle(self.masky, centery, r, value)
-        circle(self.maskz, center,  r, value)
+    def rectangle(self, center, xlen, ylen, value):
+        rectangle(self.maskx, twodim.center_ex(center), xlen, ylen, 1)
+        rectangle(self.masky, twodim.center_ey(center), xlen, ylen, 1)
+        rectangle(self.maskz, twodim.center_ez(center), xlen, ylen, 1)
         return self
 
 
