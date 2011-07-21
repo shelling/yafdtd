@@ -11,3 +11,4 @@ dist/
 MANIFEST
 build/
 *.mp4
+*.hdf5
