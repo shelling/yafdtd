@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+#-*- mode: python -*-
+
+import sys, os, matplotlib, pylab, h5py, numpy
+sys.path.append(".")
+
+
+from numpy.fft import fft, fftshift
+from numpy import abs
+
+filename = sys.argv[1]
+location = int(sys.argv[2])
+
+hdf5 = h5py.File(filename, "r")
+dt = hdf5.attrs["dt"]
+fc = hdf5.attrs["frequency"]
+timelength = len(hdf5["timeline"])
+shape = hdf5["timeline/1/hz"].shape
+
+te_e = numpy.zeros(timelength)
+te_h = numpy.zeros(timelength)
+plane_e = numpy.zeros((timelength,shape[1]))
+
+for t in xrange(timelength):
+    te_e[t] = hdf5["teinc/%d/e"%t][location]
+    te_h[t] = hdf5["teinc/%d/h"%t][location]
+    plane_e[t] = hdf5["timeline/%d/ey"%t][location]
+
+pylab.subplot(2,1,1)
+pylab.plot(te_e)
+pylab.plot(numpy.array([item.sum() for item in plane_e])/shape[1])
+
+pylab.subplot(2,1,2)
+freq = numpy.arange(-timelength/2,timelength/2)/(dt*timelength)
+inc_spectrum = abs(fftshift(fft(te_e, axis=0), axes=(0,)))
+# trans_spectrum = abs(fftshift(fft(plane_e[:,151], axis=0), axes=(0,)))
+trans_spectrum = abs(fftshift(fft(plane_e, axis=0), axes=(0,)))
+trans_spectrum_sum = numpy.array([ item.sum() for item in trans_spectrum ])/shape[1]
+pylab.plot(freq, trans_spectrum_sum/inc_spectrum)
+pylab.xlim(0,2*fc)
+
+pylab.show()
+

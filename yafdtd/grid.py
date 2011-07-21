@@ -332,10 +332,17 @@ class Plane(object):
         self.attrs["dt"] = dx/(2*c)
         return self
 
-    def frequency(self, frequency):
-        self.attrs["frequency"]  = frequency
-        self.attrs["wavelength"] = c/frequency
-        return self
+    def dt(self):
+        return self.attrs["dt"]
+
+    def frequency(self, frequency=None):
+        if frequency:
+            self.attrs["frequency"]  = frequency
+            self.attrs["wavelength"] = c/frequency
+            return self
+        else:
+            return self.attrs["frequency"]
+
 
     def wavelength(self, wavelength):
         self.attrs["wavelength"] = wavelength
@@ -580,6 +587,17 @@ class XTFSFPlane(PlaneDecorator):
             self.bzfield[self.xtfsf[0]-1,self.ytfsf[0]:self.ytfsf[1]+1] += 0.5 * self.teinc.efield[self.xtfsf[0]]
             self.bzfield[self.xtfsf[1],  self.ytfsf[0]:self.ytfsf[1]+1] -= 0.5 * self.teinc.efield[self.xtfsf[1]]
         return self
+    def open(self, filename=None):
+        super(XTFSFPlane, self).open(filename)
+        self.hdf5.require_group("teinc")
+        self.hdf5.require_group("tminc")
+        return self
+    def save(self):
+        super(XTFSFPlane, self).save()
+        self.hdf5.require_group("teinc/%d" % self.t)
+        self.hdf5["teinc/%d/e" % self.t] = self.teinc.efield
+        self.hdf5["teinc/%d/h" % self.t] = self.teinc.hfield
+        return self
 
 class DispersivePlane(PlaneDecorator):
     def __init__(self, orig):
@@ -675,16 +693,16 @@ class PolarDPlane(object):
         self.c3 = (2*self.a*(self.dt**2)) / denominator
         return self
 
-    def circle(self, center, r):
-        circle(self.maskx, twodim.center_ex(center), r, 1)
-        circle(self.masky, twodim.center_ey(center), r, 1)
-        circle(self.maskz, twodim.center_ez(center), r, 1)
+    def circle(self, center, r, value):
+        circle(self.maskx, twodim.center_ex(center), r, value)
+        circle(self.masky, twodim.center_ey(center), r, value)
+        circle(self.maskz, twodim.center_ez(center), r, value)
         return self
 
     def rectangle(self, center, xlen, ylen, value):
-        rectangle(self.maskx, twodim.center_ex(center), xlen, ylen, 1)
-        rectangle(self.masky, twodim.center_ey(center), xlen, ylen, 1)
-        rectangle(self.maskz, twodim.center_ez(center), xlen, ylen, 1)
+        rectangle(self.maskx, twodim.center_ex(center), xlen, ylen, value)
+        rectangle(self.masky, twodim.center_ey(center), xlen, ylen, value)
+        rectangle(self.maskz, twodim.center_ez(center), xlen, ylen, value)
         return self
 
 

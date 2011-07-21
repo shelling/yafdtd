@@ -14,11 +14,13 @@ length = 301
 
 plane = DispersivePlane(XTFSFPlane(UPMLPlane(PBCPlane(Plane("silver-rod-25nm-xtfsf-te-dx1nm", (length,length))))))
 plane.pml(
-    thick = 13
+    x = True,
+    y = True,
+    thick = 20
 )
 plane.pbc(
     x = False,
-    y = False
+    y = True
 )
 plane.tfsf(
     xtfsf = [50, length-50],
@@ -32,7 +34,7 @@ plane.wavelength(347.5*10**-9).dx(10**-9).save_attrs()
 # metal = PolarDPlane(plane.shape, a=(9.39*10**15)**2, b=0, c=3.14*10**13, d=1, dt=plane.attrs["dt"])
 metal = PolarDPlane(plane.shape, a=(1.757*10**16)**2, b=0, c=3.0786*10**14, d=1, dt=plane.attrs["dt"])
 metal.set_factor()
-metal.circle([151,151], 25, 1)
+metal.circle([151,151], 25)
 
 prepare("result/%s/ex" % plane.name)
 prepare("result/%s/ey" % plane.name)
